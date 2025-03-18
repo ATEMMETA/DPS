@@ -35,7 +35,7 @@
     "react-icons": "^4.12.0",
     "react-is": "^18.2.0",
     "react-markdown": "^9.0.0",
-    "react-router-dom": "^6.22.0", // Remove if not needed
+    "react-router-dom": "^6.22.0",
     "remark-gfm": "^4.0.0",
     "typescript": "^5.4.0",
     "web-vitals": "^3.5.0"
@@ -47,12 +47,12 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.16",
-    "eslint": "^8.57.0", // Updated to latest 8.x (or use "^9.0.0" if stable)
-    "eslint-config-next": "^15.3.0", // Matches Next.js version
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.3.0",
     "eventsource": "^2.1.0",
     "postcss": "^8.4.30",
     "prettier-plugin-tailwindcss": "^0.5.0",
-    "tailwindcss": "^3.4.0" // or "^4.0.0" if stable
+    "tailwindcss": "^3.4.0",
   },
   "resolutions": {
     "@types/react": "^19.0.0",
