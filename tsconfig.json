@@ -12,9 +12,9 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // Leave as-is for now; could test "react-jsx" later
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext", // Changed from "node" to match "nodenext"
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
