@@ -1,5 +1,5 @@
 'use client';
-// Chakra imports
+import React from 'react';
 import {
   Flex,
   FormLabel,
@@ -11,12 +11,13 @@ import {
 export default function Default(props: {
   id?: string;
   label?: string;
-  extra?: JSX.Element;
+  extra?: React.JSX.Element;
   placeholder?: string;
   type?: string;
   [x: string]: any;
 }) {
   const { id, label, extra, placeholder, type, mb, ...rest } = props;
+}
   // Chakra Color Mode
   const textColorPrimary = useColorModeValue('navy.700', 'white');
   const searchColor = useColorModeValue('gray.700', 'white');
