@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'; // Add this import
+import React from 'react';
 import {
   IconButton,
   Input,
@@ -9,14 +9,15 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 
-export function SearchBar(props: {
+interface SearchBarProps {
   variant?: string;
-  children?: React.JSX.Element; // Fix the type
   borderRadius?: string;
   value?: string | number;
   [x: string]: any;
-}): React.JSX.Element { // Add return type for consistency
-  const { variant, children, borderRadius, ...rest } = props;
+}
+
+export function SearchBar(props: SearchBarProps): React.JSX.Element {
+  const { variant, borderRadius, ...rest } = props;
   const searchIconColor = useColorModeValue('gray.700', 'white');
   const searchColor = useColorModeValue('gray.700', 'white');
   const inputBg = useColorModeValue('transparent', 'navy.800');
@@ -44,7 +45,7 @@ export function SearchBar(props: {
             borderColor: 'transparent',
           }}
           _hover={{
-            bg: 'none',
+            bg: 'inherit', // Changed from 'none' to 'inherit'
             transform: 'none',
             borderColor: 'transparent',
           }}
@@ -55,14 +56,7 @@ export function SearchBar(props: {
         />
       </InputLeftElement>
       <Input
-        w={{
-          base: '100px',
-          md: '270px',
-          lg: '530px',
-          xl: '660px',
-          '2xl': '860px',
-          '3xl': '860px',
-        }}
+        w={{ base: '100px', md: '270px', lg: '530px', xl: '660px', '2xl': '860px', '3xl': '860px' }}
         maxW="100%"
         variant="search"
         fontSize="sm"
@@ -70,7 +64,7 @@ export function SearchBar(props: {
         color={searchColor}
         fontWeight="500"
         _placeholder={{ color: 'gray.500', fontSize: '14px' }}
-        borderRadius={borderRadius ? borderRadius : '14px'}
+        borderRadius={borderRadius || '14px'} // Simplified default border radius
         placeholder="Search..."
       />
     </InputGroup>
