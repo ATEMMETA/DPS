@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@babel/traverse": "^7.25.0",
-    "@chakra-ui/icons": "^2.10.0",
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.0",
     "@chakra-ui/system": "^2.10.0",
     "@chakra-ui/theme-tools": "^2.10.0",
