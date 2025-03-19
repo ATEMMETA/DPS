@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'; // Add this import
+import React from 'react';
 import {
   IconButton,
   Input,
@@ -9,15 +9,23 @@ import {
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 
-export function SearchBar(props: {
-  variant?: string;
+interface SearchBarProps {
+  variant?: 'search' | 'otherVariant'; //Example of variant usage
   background?: string;
-  children?: React.JSX.Element; // Fix the type
   placeholder?: string;
   borderRadius?: string | number;
-  [x: string]: any;
-}): React.JSX.Element { // Add return type for consistency
-  const { variant, background, children, placeholder, borderRadius, ...rest } = props;
+  [x: string]: any; // Consider refining this
+}
+
+export function SearchBar(props: SearchBarProps): React.JSX.Element {
+  const {
+    variant = 'search', // Default variant
+    background,
+    placeholder = 'Search', // More generic default
+    borderRadius = '30px', // Default border radius
+    ...rest
+  } = props;
+
   const searchIconColor = useColorModeValue('gray.700', 'white');
   const inputBg = useColorModeValue('secondaryGray.300', 'navy.900');
   const inputText = useColorModeValue('gray.700', 'gray.100');
@@ -30,30 +38,28 @@ export function SearchBar(props: {
           bg="inherit"
           borderRadius="inherit"
           _active={{
-            bg: 'inherit',
+            bg: 'rgba(0, 0, 0, 0.1)', // Subtle active feedback
             transform: 'none',
             borderColor: 'transparent',
           }}
           _hover={{
-            bg: 'inherit',
+            bg: 'rgba(0, 0, 0, 0.05)', // Subtle hover feedback
             transform: 'none',
             borderColor: 'transparent',
           }}
-          _focus={{
-            boxShadow: 'none',
-          }}
+          _focus={{ boxShadow: 'none' }}
           icon={<SearchIcon color={searchIconColor} w="14px" h="14px" />}
         />
       </InputLeftElement>
       <Input
-        variant="search"
+        variant={variant} // Use the variant prop
         fontSize="sm"
         bg={background ? background : inputBg}
         color={inputText}
         fontWeight="500"
         _placeholder={{ color: 'gray.500', fontSize: '14px' }}
-        borderRadius={borderRadius ? borderRadius : '30px'}
-        placeholder={placeholder ? placeholder : 'Search'}
+        borderRadius={borderRadius}
+        placeholder={placeholder}
       />
     </InputGroup>
   );
