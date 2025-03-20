@@ -3,7 +3,7 @@ import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
 import { FC, useEffect, useState } from 'react';
-import { DndProvider, useDrop } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -13,16 +13,41 @@ interface Props {
   onChange?: (value: string) => void;
 }
 
-// Define the type of the dragged item
 interface DraggedItem {
   text: string;
 }
+
+// Draggable Text Component (New)
+const DraggableText: FC<{ text: string }> = ({ text }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'text',
+    item: { text },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={drag}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        padding: '10px',
+        backgroundColor: '#ddd',
+        marginBottom: '10px',
+        cursor: 'move',
+      }}
+    >
+      {text}
+    </div>
+  );
+};
 
 // Input Drop Zone Component
 const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'text',
-    drop: (item: DraggedItem) => onDrop(item.text), // Use DraggedItem here
+    drop: (item: DraggedItem) => onDrop(item.text),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
@@ -134,6 +159,8 @@ export const CodeBlock: FC<Props> = ({
         >
           {copyText}
         </button>
+        {/* Add a sample draggable item */}
+        <DraggableText text="Sample code: console.log('Hello!')" />
         <InputDropZone onDrop={handleDrop} />
         {isLoading && <p>Loading...</p>}
         {apiError && <p style={{ color: 'red' }}>Error: {apiError}</p>}
