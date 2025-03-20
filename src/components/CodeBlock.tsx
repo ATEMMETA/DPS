@@ -25,27 +25,29 @@ export const CodeBlock: FC<Props> = ({
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      setApiError(null); // Reset error state
       let retries = 3;
       while (retries > 0) {
         try {
           const res = await fetch(
-            'https://79da20cc15999447f054486ccf411bd8.serveo.net/process_text' //Replace with new address
+            'https://79da20cc15999447f054486ccf411bd8.serveo.net/process_text',
+            { mode: 'cors' } // Add CORS mode
           );
           if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`);
           }
           const data = await res.json();
-          setApiResponse(data.message);
-          setApiError(null);
+          setApiResponse(data?.message || 'No message received');
           setIsLoading(false);
-          return; // Success, exit retry loop
-        } catch (err) {
-          console.error(err);
-          setApiError(err.message);
+          return; // Success, exit loop
+        } catch (err: any) {
+          console.error('Fetch error:', err);
+          setApiError(err.message || 'Unknown error');
           retries--;
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second before retry
+          await new Promise(resolve => setTimeout(resolve, 1000)); // 1s delay
         }
       }
+      setApiError('Failed after retries');
       setIsLoading(false);
     };
     fetchData();
@@ -71,7 +73,7 @@ export const CodeBlock: FC<Props> = ({
       </button>
       {isLoading && <p>Loading...</p>}
       {apiError && <p style={{ color: 'red' }}>Error: {apiError}</p>}
-      {apiResponse && <p>{apiResponse}</p>}
+      {apiResponse && !apiError && <p>{apiResponse}</p>}
       <CodeMirror
         editable={editable}
         value={code}
