@@ -2,8 +2,8 @@ import { StreamLanguage } from '@codemirror/language';
 import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
-import { FC, useEffect, useState } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { FC, useEffect, useState, RefObject } from 'react';
+import { DndProvider, useDrag, useDrop, ConnectDragSource } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -17,7 +17,6 @@ interface DraggedItem {
   text: string;
 }
 
-// Draggable Text Component (New)
 const DraggableText: FC<{ text: string }> = ({ text }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'text',
@@ -29,7 +28,7 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
 
   return (
     <div
-      ref={drag}
+      ref={(node) => drag(node)} // Ref callback to connect drag source
       style={{
         opacity: isDragging ? 0.5 : 1,
         padding: '10px',
@@ -43,7 +42,6 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
   );
 };
 
-// Input Drop Zone Component
 const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'text',
@@ -74,7 +72,6 @@ const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
   );
 };
 
-// Output Zone Component
 const OutputZone: FC<{ output: string }> = ({ output }) => (
   <div
     style={{
@@ -159,7 +156,6 @@ export const CodeBlock: FC<Props> = ({
         >
           {copyText}
         </button>
-        {/* Add a sample draggable item */}
         <DraggableText text="Sample code: console.log('Hello!')" />
         <InputDropZone onDrop={handleDrop} />
         {isLoading && <p>Loading...</p>}
