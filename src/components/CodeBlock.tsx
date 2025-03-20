@@ -19,24 +19,36 @@ export const CodeBlock: FC<Props> = ({
 }) => {
   const [copyText, setCopyText] = useState<string>('Copy');
   const [apiResponse, setApiResponse] = useState<string>('');
-  const [apiError, setApiError] = useState<string | null>(null); // Add error state
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch('https://09cc319230c56b2e514ab03367b0cd02.serveo.net/process_text')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+    const fetchData = async () => {
+      setIsLoading(true);
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          const res = await fetch(
+            'https://79da20cc15999447f054486ccf411bd8.serveo.net/process_text' //Replace with new address
+          );
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          const data = await res.json();
+          setApiResponse(data.message);
+          setApiError(null);
+          setIsLoading(false);
+          return; // Success, exit retry loop
+        } catch (err) {
+          console.error(err);
+          setApiError(err.message);
+          retries--;
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second before retry
         }
-        return res.json();
-      })
-      .then((data) => {
-        setApiResponse(data.message);
-        setApiError(null); // Clear any previous errors
-      })
-      .catch((err) => {
-        console.error(err);
-        setApiError(err.message); // Set the error message
-      });
+      }
+      setIsLoading(false);
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -57,6 +69,7 @@ export const CodeBlock: FC<Props> = ({
       >
         {copyText}
       </button>
+      {isLoading && <p>Loading...</p>}
       {apiError && <p style={{ color: 'red' }}>Error: {apiError}</p>}
       {apiResponse && <p>{apiResponse}</p>}
       <CodeMirror
