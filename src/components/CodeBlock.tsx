@@ -19,12 +19,24 @@ export const CodeBlock: FC<Props> = ({
 }) => {
   const [copyText, setCopyText] = useState<string>('Copy');
   const [apiResponse, setApiResponse] = useState<string>('');
+  const [apiError, setApiError] = useState<string | null>(null); // Add error state
 
   useEffect(() => {
     fetch('https://09cc319230c56b2e514ab03367b0cd02.serveo.net/process_text')
-      .then(res => res.json())
-      .then(data => setApiResponse(data.message))
-      .catch(err => console.error(err));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setApiResponse(data.message);
+        setApiError(null); // Clear any previous errors
+      })
+      .catch((err) => {
+        console.error(err);
+        setApiError(err.message); // Set the error message
+      });
   }, []);
 
   useEffect(() => {
@@ -45,7 +57,8 @@ export const CodeBlock: FC<Props> = ({
       >
         {copyText}
       </button>
-      <p>{apiResponse}</p>
+      {apiError && <p style={{ color: 'red' }}>Error: {apiError}</p>}
+      {apiResponse && <p>{apiResponse}</p>}
       <CodeMirror
         editable={editable}
         value={code}
