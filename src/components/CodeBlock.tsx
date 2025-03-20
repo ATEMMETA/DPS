@@ -13,14 +13,17 @@ interface Props {
   onChange?: (value: string) => void;
 }
 
+// Define the type of the dragged item
+interface DraggedItem {
+  text: string;
+}
+
 // Input Drop Zone Component
-const InputDropZone: FC<{
-  onDrop: (text: string) => void;
-}> = ({ onDrop }) => {
+const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'text',
-    drop: (item: { text: string }) => onDrop(item.text),
-    collect: monitor => ({
+    drop: (item: DraggedItem) => onDrop(item.text), // Use DraggedItem here
+    collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
@@ -38,7 +41,7 @@ const InputDropZone: FC<{
     >
       <p>Drag code here or paste below</p>
       <textarea
-        onChange={e => onDrop(e.target.value)}
+        onChange={(e) => onDrop(e.target.value)}
         placeholder="Or paste code here..."
         style={{ width: '100%', minHeight: '50px' }}
       />
@@ -75,7 +78,6 @@ export const CodeBlock: FC<Props> = ({
 
   useEffect(() => {
     if (!inputCode) return;
-
     const fetchData = async () => {
       setIsLoading(true);
       setApiError(null);
@@ -85,7 +87,7 @@ export const CodeBlock: FC<Props> = ({
           const res = await fetch(
             'https://79da20cc15999447f054486ccf411bd8.serveo.net/process_text',
             {
-              method: 'POST', // Switch to POST for sending code
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ code: inputCode }),
             }
@@ -100,7 +102,7 @@ export const CodeBlock: FC<Props> = ({
           console.error('Fetch error:', err);
           setApiError(err.message || 'Unknown error');
           retries--;
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }
       }
       setApiError('Failed after retries');
