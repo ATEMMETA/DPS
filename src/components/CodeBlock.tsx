@@ -2,7 +2,7 @@ import { StreamLanguage } from '@codemirror/language';
 import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
-import { FC, useEffect, useState, RefObject } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { DndProvider, useDrag, useDrop, ConnectDragSource } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -18,7 +18,7 @@ interface DraggedItem {
 }
 
 const DraggableText: FC<{ text: string }> = ({ text }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: 'text',
     item: { text },
     collect: (monitor) => ({
@@ -28,7 +28,11 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
 
   return (
     <div
-      ref={(node) => drag(node)} // Ref callback to connect drag source
+      ref={(node) => {
+        if (node) {
+          drag(node as HTMLElement); // Type assertion and null check
+        }
+      }}
       style={{
         opacity: isDragging ? 0.5 : 1,
         padding: '10px',
