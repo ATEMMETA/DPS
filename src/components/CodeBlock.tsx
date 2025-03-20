@@ -18,12 +18,19 @@ export const CodeBlock: FC<Props> = ({
   onChange = () => {},
 }) => {
   const [copyText, setCopyText] = useState<string>('Copy');
+  const [apiResponse, setApiResponse] = useState<string>('');
+
+  useEffect(() => {
+    fetch('https://09cc319230c56b2e514ab03367b0cd02.serveo.net/process_text')
+      .then(res => res.json())
+      .then(data => setApiResponse(data.message))
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setCopyText('Copy');
     }, 2000);
-
     return () => clearTimeout(timeout);
   }, [copyText]);
 
@@ -37,7 +44,8 @@ export const CodeBlock: FC<Props> = ({
         }}
       >
         {copyText}
-      </button> 
+      </button>
+      <p>{apiResponse}</p>
       <CodeMirror
         editable={editable}
         value={code}
