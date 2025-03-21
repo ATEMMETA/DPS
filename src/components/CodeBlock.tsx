@@ -3,7 +3,7 @@ import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
 import { FC, useEffect, useState } from 'react';
-import { DndProvider, useDrag, useDrop, ConnectDragSource } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -18,7 +18,7 @@ interface DraggedItem {
 }
 
 const DraggableText: FC<{ text: string }> = ({ text }) => {
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: 'text',
     item: { text },
     collect: (monitor) => ({
@@ -30,7 +30,7 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
     <div
       ref={(node) => {
         if (node) {
-          drag(node as HTMLElement); // Type assertion and null check
+          drag(node as HTMLElement);
         }
       }}
       style={{
@@ -57,7 +57,11 @@ const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
 
   return (
     <div
-      ref={drop}
+      ref={(node) => {
+        if (node) {
+          drop(node as HTMLElement);
+        }
+      }}
       style={{
         border: `2px dashed ${isOver ? 'green' : 'gray'}`,
         padding: '20px',
