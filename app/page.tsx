@@ -2,7 +2,7 @@
 /*eslint-disable*/
 
 import Link from '@/components/link/Link';
-import MessageBoxChat from '@/components/MessageBox';
+import { CodeBlock } from '@/components/CodeBlock'; // Import CodeBlock
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
   Accordion,
@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
 import Bg from '../public/img/chat/bg-image.png';
 
-export default function Chat() { // Removed props here
+export default function Chat() {
   // Input States
   const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
   const [inputCode, setInputCode] = useState<string>('');
@@ -34,8 +34,6 @@ export default function Chat() { // Removed props here
   // Loading state
   const [loading, setLoading] = useState<boolean>(false);
 
-  // API Key
-  // const [apiKey, setApiKey] = useState<string>(apiKeyApp);
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
   const inputColor = useColorModeValue('navy.700', 'white');
   const iconColor = useColorModeValue('brand.500', 'white');
@@ -55,11 +53,11 @@ export default function Chat() { // Removed props here
     { color: 'gray.500' },
     { color: 'whiteAlpha.600' },
   );
+
   const handleTranslate = async () => {
     let apiKey = localStorage.getItem('apiKey');
     setInputOnSubmit(inputCode);
 
-    // Chat post conditions(maximum number of characters, valid message etc.)
     const maxCodeLength = model === 'gpt-4o' ? 700 : 700;
 
     if (!apiKey?.includes('sk-')) {
@@ -74,7 +72,7 @@ export default function Chat() { // Removed props here
 
     if (inputCode.length > maxCodeLength) {
       alert(
-        `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters. You are currently at ${inputCode.length} characters.`,
+        `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
       );
       return;
     }
@@ -87,7 +85,6 @@ export default function Chat() { // Removed props here
       apiKey,
     };
 
-    // -------------- Fetch --------------
     const response = await fetch('./api/chatAPI', {
       method: 'POST',
       headers: {
@@ -129,38 +126,49 @@ export default function Chat() { // Removed props here
 
     setLoading(false);
   };
-  // -------------- Copy Response --------------
-  // const copyToClipboard = (text: string) => {
-  //   const el = document.createElement('textarea');
-  //   el.value = text;
-  //   document.body.appendChild(el);
-  //   el.select();
-  //   document.execCommand('copy');
-  //   document.body.removeChild(el);
-  // };
-
-  // *** Initializing apiKey with .env.local value
-  // useEffect(() => {
-  // ENV file verison
-  // const apiKeyENV = process.env.NEXT_PUBLIC_OPENAI_API_KEY
-  // if (apiKey === undefined || null) {
-  //   setApiKey(apiKeyENV)
-  // }
-  // }, [])
 
   const handleChange = (Event: any) => {
     setInputCode(Event.target.value);
   };
 
   return (
-    // Rest of the component code remains the same
     <Flex
       w="100%"
       pt={{ base: '70px', md: '0px' }}
       direction="column"
       position="relative"
     >
-        //...etc
+      <Box p={4}>
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Chat Interface
+        </Text>
+        {/* Replace //...etc with CodeBlock */}
+        <CodeBlock
+          code={inputCode || '// Type or drag code here'}
+          height="400"
+          editable={true}
+          onChange={(value) => setInputCode(value)} // Sync with inputCode state
+        />
+        {loading && <Text mt={2}>Loading...</Text>}
+        {outputCode && (
+          <Box mt={4}>
+            <Text fontSize="lg" fontWeight="bold">
+              Response:
+            </Text>
+            <Text>{outputCode}</Text>
+          </Box>
+        )}
+        <Button
+          mt={4}
+          bg={buttonBg}
+          shadow={buttonShadow}
+          color={brandColor}
+          onClick={handleTranslate}
+          isLoading={loading}
+        >
+          Send
+        </Button>
+      </Box>
     </Flex>
   );
 }
