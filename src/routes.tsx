@@ -6,13 +6,11 @@ import {
   MdLayers,
   MdAutoAwesome,
   MdOutlineManageAccounts,
+  MdChat,
 } from 'react-icons/md';
 import { IoMdPerson } from 'react-icons/io';
 import { LuHistory } from 'react-icons/lu';
 import { RoundedChart } from '@/components/icons/Icons';
-
-import { Icon } from './lib/chakra';
-import { MdAutoAwesome, MdChat } from 'react-icons/md';
 import { IRoute } from './types/navigation';
 
 const routes: IRoute[] = [
@@ -46,31 +44,6 @@ const routes: IRoute[] = [
     icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
-  // Keep the rest disabled for now—future features!
-  {
-    name: 'All Templates',
-    disabled: true,
-    path: '/all-templates',
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    collapse: false,
-  },
-  // ... (rest of your original routes unchanged)
-];
-
-export default routes;
-
-// Auth Imports
-import { IRoute } from './types/navigation';
-
-const routes: IRoute[] = [
-  {
-    name: 'Chat UI',
-    path: '/',
-    icon: (
-      <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />
-    ),
-    collapse: false,
-  },
   {
     name: 'All Templates',
     disabled: true,
@@ -85,7 +58,6 @@ const routes: IRoute[] = [
     icon: <Icon as={MdLayers} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
-  // --- Others ---
   {
     name: 'Other Pages',
     disabled: true,
@@ -110,7 +82,6 @@ const routes: IRoute[] = [
       },
     ],
   },
-  // --- Admin Pages ---
   {
     name: 'Admin Pages',
     disabled: true,
@@ -179,7 +150,6 @@ const routes: IRoute[] = [
     invisible: true,
     collapse: false,
   },
-  // -------------- Prompt Pages --------------
   {
     name: 'Essay Generator',
     disabled: true,
@@ -258,24 +228,3 @@ const routes: IRoute[] = [
     path: '/review-responder',
     icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
     invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Business Idea Generator',
-    disabled: true,
-    path: '/business-generator',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-  {
-    name: 'Article Generator',
-    disabled: true,
-    path: '/article',
-    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
-    invisible: true,
-    collapse: false,
-  },
-];
-
-export default routes;
