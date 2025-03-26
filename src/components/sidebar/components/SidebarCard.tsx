@@ -54,7 +54,7 @@ export default function SidebarDocs() {
           textAlign="center"
           mb="14px"
         >
-          Go unlimited with PRO
+          Go unlimited with DPS
         </Text>
         <Text fontSize="14px" color={'white'} mb="14px" textAlign="center">
           Get your AI Project to another level and start doing more with DPS 
