@@ -163,4 +163,19 @@ const routes: IRoute[] = [
     name: 'Instagram Caption',
     disabled: true,
     path: '/caption',
-    icon: <
+    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
+    invisible: true,
+    collapse: false,
+  }, // <--- Add this closing curly bracket
+  {
+    name: 'FAQs Content',
+    disabled: true,
+    path: '/faq',
+    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
+    invisible: true,
+    collapse: false,
+  },
+  // ... (rest of your route objects) ...
+];
+
+export default routes;
