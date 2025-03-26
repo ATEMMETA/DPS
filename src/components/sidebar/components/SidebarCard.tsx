@@ -57,8 +57,8 @@ export default function SidebarDocs() {
           Go unlimited with PRO
         </Text>
         <Text fontSize="14px" color={'white'} mb="14px" textAlign="center">
-          Get your AI Project to another level and start doing more with Horizon
-          AI Template PRO!
+          Get your AI Project to another level and start doing more with DPS 
+          AI!
         </Text>
       </Flex>
       <Link href="https://horizon-ui.com/ai-template" isExternal>
@@ -74,7 +74,7 @@ export default function SidebarDocs() {
           mx="auto"
           borderRadius="45px"
         >
-          Get started with PRO
+          Get started with DPS AI
         </Button>
       </Link>
     </Flex>
