@@ -11,6 +11,54 @@ import { IoMdPerson } from 'react-icons/io';
 import { LuHistory } from 'react-icons/lu';
 import { RoundedChart } from '@/components/icons/Icons';
 
+import { Icon } from './lib/chakra';
+import { MdAutoAwesome, MdChat } from 'react-icons/md';
+import { IRoute } from './types/navigation';
+
+const routes: IRoute[] = [
+  {
+    name: 'DPS - Dependency Helper',
+    path: '/',
+    icon: <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  {
+    name: 'GPT Helper',
+    path: '/chatui/gpt',
+    icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  {
+    name: 'Grok Helper',
+    path: '/chatui/grok',
+    icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  {
+    name: 'Serveo Helper',
+    path: '/chatui/serveo',
+    icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  {
+    name: 'Gemini Helper',
+    path: '/chatui/gemini',
+    icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  // Keep the rest disabled for now—future features!
+  {
+    name: 'All Templates',
+    disabled: true,
+    path: '/all-templates',
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  // ... (rest of your original routes unchanged)
+];
+
+export default routes;
+
 // Auth Imports
 import { IRoute } from './types/navigation';
 
