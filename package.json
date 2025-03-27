@@ -1,4 +1,4 @@
-{
+ú{
   "name": "horizon-ai-template-pro",
   "version": "3.0.0",
   "private": true,
@@ -42,7 +42,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "@types/react-dnd": "^3.0.2",
-    "@vercel/ai": "github:vercel/ai-sdk"
+    "@vercel/ai": "git+https://github.com/vercel/ai-sdk.git"
     
   },
   "devDependencies": {
