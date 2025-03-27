@@ -42,7 +42,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "@types/react-dnd": "^3.0.2",
-    "@vercel/ai": "git+https://github.com/vercel/ai-sdk.git"
+    "@vercel/ai": "0.0.40"
     
   },
   "devDependencies": {
