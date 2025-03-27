@@ -41,8 +41,7 @@
     "web-vitals": "^3.5.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "@types/react-dnd": "^3.0.2",
-    "ai": "^4.2.6"
+    "@types/react-dnd": "^3.0.2"
     
   },
   "devDependencies": {
