@@ -2,15 +2,25 @@
 /*eslint-disable*/
 
 import { CodeBlock } from '@/components/CodeBlock';
-import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
+import { ChatBody, OpenAIModel } from '@/types/types';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Img,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useState } from 'react';
-import { MdAutoAwesome } from 'react-icons/md';
+import { MdAutoAwesome, MdPerson } from 'react-icons/md';
 import Bg from '../../public/img/chat/bg-image.png';
 import Head from 'next/head';
 
-export default function GrokHelper() {
+export default function GPTHelper() {
   const [inputCode, setInputCode] = useState<string>('');
   const [outputCode, setOutputCode] = useState<string>('');
+  const [model] = useState<OpenAIModel>('gpt-4o');
   const [loading, setLoading] = useState<boolean>(false);
 
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
@@ -24,7 +34,11 @@ export default function GrokHelper() {
   const textColor = useColorModeValue('navy.700', 'white');
 
   const handleGenerate = async () => {
-    const apiKey = 'YOUR_GROK_API_KEY'; // Replace with your key
+    const apiKey = localStorage.getItem('apiKey');
+    if (!apiKey?.includes('sk-')) {
+      alert('Please enter a valid OpenAI API key.');
+      return;
+    }
     if (!inputCode) {
       alert('Please enter your code.');
       return;
@@ -32,26 +46,36 @@ export default function GrokHelper() {
     setOutputCode(' ');
     setLoading(true);
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    const body: ChatBody = { inputCode, model, apiKey };
+    const response = await fetch('/api/chatAPI', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'grok-beta',
-        messages: [{ role: 'user', content: `Analyze this code for dependencies: ${inputCode}` }],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
       setLoading(false);
-      alert('Something went wrong with Grok.');
+      alert('Something went wrong with ChatGPT.');
       return;
     }
 
-    const data = await response.json();
-    setOutputCode(data.choices[0].message.content);
+    const data = response.body;
+    if (!data) {
+      setLoading(false);
+      alert('Something went wrong');
+      return;
+    }
+
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      setOutputCode((prevCode) => prevCode + chunkValue);
+    }
     setLoading(false);
   };
 
@@ -81,7 +105,7 @@ export default function GrokHelper() {
           maxW="1000px"
         >
           <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center" color={textColor}>
-            Grok Helper - Dependency Checker
+            GPT Helper - Dependency Checker
           </Text>
           <Box mb={4}>
             <ins
@@ -141,13 +165,13 @@ export default function GrokHelper() {
             onClick={handleGenerate}
             isLoading={loading}
           >
-            Ask Grok & Generate Dependencies
+            Ask GPT & Generate Dependencies
           </Button>
           <Text fontSize="xs" textAlign="center" color={gray} mt="20px">
-            Powered by xAI’s Grok. Results may vary.
+            Free Research Preview. ChatGPT may produce inaccurate information.
           </Text>
         </Flex>
       </Flex>
     </>
   );
-    }
+}
