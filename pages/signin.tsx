@@ -16,6 +16,11 @@ import {
 import GradientBorder from "components/GradientBorder/GradientBorder";
 import AuthFooter from "components/Footer/AuthFooter";
 import signInImage from "assets/img/signInImage.png";
+// In signin.tsx, handleSignIn:
+import { useRouter } from "next/router";
+const router = useRouter();
+// After success:
+router.push("/chatui/grok");
 
 interface SignInProps {}
 
