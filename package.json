@@ -42,7 +42,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "@types/react-dnd": "^3.0.2",
-    "ai": "^4.2.6" // Latest per github.com/vercel/ai releases (March 26, 2025)
+    "ai": "^4.2.6"
     
   },
   "devDependencies": {
