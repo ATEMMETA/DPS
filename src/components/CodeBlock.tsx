@@ -6,7 +6,7 @@ import { FC, useState } from 'react';
 import { DndProvider, useDrag, useDrop, ConnectDropTarget } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-yinterface Props {
+interface Props {
   code: string;
   height: string;
   editable?: boolean;
