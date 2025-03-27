@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'; // Pages Router
 import GPTHelper from './gpt';
 import GrokHelper from './grok';
 import ServeoHelper from './serveo';
@@ -8,6 +8,9 @@ import GeminiHelper from './gemini';
 export default function ChatUIPage() {
   const router = useRouter();
   const { page } = router.query;
+
+  // Debug: Log the page param
+  console.log('Route param:', page);
 
   switch (page) {
     case 'gpt':
