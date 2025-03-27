@@ -2,8 +2,8 @@ import { StreamLanguage } from '@codemirror/language';
 import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
-import { FC, useEffect, useState } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { FC, useState } from 'react';
+import { DndProvider, useDrag, useDrop, ConnectDropTarget } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -57,7 +57,7 @@ const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
 
   return (
     <div
-      ref={drop} // Correct ref usage for drop
+      ref={drop as unknown as React.RefObject<HTMLDivElement>}
       style={{
         border: `2px dashed ${isOver ? 'green' : 'gray'}`,
         padding: '20px',
@@ -96,5 +96,32 @@ export const CodeBlock: FC<Props> = ({
   editable = false,
   onChange = () => {},
 }) => {
-  // ... (rest of your CodeBlock component) ...
+  const [editorCode, setEditorCode] = useState(code);
+
+  const handleCodeChange = (value: string) => {
+    setEditorCode(value);
+    onChange(value);
+  };
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div>
+        <DraggableText text="Sample code: console.log('Hello!')" />
+        <InputDropZone onDrop={(text) => handleCodeChange(text)} />
+        <CodeMirror
+          value={editorCode}
+          height={height}
+          theme={tokyoNight}
+          extensions={[StreamLanguage.define(go)]}
+          onChange={handleCodeChange}
+          editable={editable}
+          basicSetup={{
+            lineNumbers: true,
+            highlightActiveLine: true,
+            bracketMatching: true,
+          }}
+        />
+      </div>
+    </DndProvider>
+  );
 };
