@@ -16,9 +16,14 @@ import {
 import GradientBorder from "components/GradientBorder/GradientBorder";
 import AuthFooter from "components/Footer/AuthFooter";
 import signInImage from "assets/img/signInImage.png";
-import { useRouter } from "next/router"; // Import useRouter
+import { useRouter } from "next/router";
 
 interface SignInProps {}
+
+interface SignInResponse {
+  message: string;
+  // Add other properties if your API returns more data
+}
 
 function SignIn({}: SignInProps) {
   const titleColor = "white";
@@ -27,10 +32,33 @@ function SignIn({}: SignInProps) {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
-  const router = useRouter(); // Initialize useRouter inside the component
+  const router = useRouter();
 
   const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter both email and password.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!email.includes("@")) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid email address.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -43,8 +71,18 @@ function SignIn({}: SignInProps) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Sign-in failed");
+        let errorMessage = "Sign-in failed";
+
+        if (response.status === 400) {
+          errorMessage = "Bad request. Please check your credentials.";
+        } else if (response.status === 401) {
+          errorMessage = "Unauthorized. Invalid email or password.";
+        } else if (response.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        }
+
+        const errorData: SignInResponse = await response.json();
+        throw new Error(errorData.message || errorMessage);
       }
 
       toast({
@@ -54,7 +92,7 @@ function SignIn({}: SignInProps) {
         isClosable: true,
       });
 
-      router.push("/chatui/grok"); // Redirect after successful sign-in
+      router.push("/chatui/grok");
       setEmail("");
       setPassword("");
     } catch (error: any) {
@@ -70,211 +108,7 @@ function SignIn({}: SignInProps) {
     }
   };
 
-
- return (
-    <Flex position="relative">
-      <Flex
-        minH="100vh"
-        h={{ base: "120vh", lg: "fit-content" }}
-        w="100"
-        maxW="1044px"
-        mx="auto"
-        pt={{ sm: "100px", md: "0px" }}
-        flexDirection="column"
-        me={{ base: "auto", lg: "50px", xl: "auto" }}
-      >
-        <Flex
-          alignItems="center"
-          justifyContent="start"
-          style={{ userSelect: "none" }}
-          mx={{ base: "auto", lg: "unset" }}
-          ms={{ base: "auto", lg: "auto" }}
-          w={{ base: "100%", md: "50%", lg: "450px" }}
-          px="50px"
-        >
-          <Flex
-            direction="column"
-            w="100%"
-            background="transparent"
-            mt={{ base: "50px", md: "150px", lg: "160px", xl: "245px" }}
-            mb={{ base: "60px", lg: "95px" }}
-          >
-            <Heading color={titleColor} fontSize="32px" mb="10px">
-              Nice to see you!
-            </Heading>
-            <Text
-              mb="36px"
-              ms="4px"
-              color={textColor}
-              fontWeight="bold"
-              fontSize="14px"
-            >
-              Enter your email and password to sign in
-            </Text>
-            <FormControl as="form" onSubmit={handleSignIn}>
-              <FormLabel
-                ms="4px"
-                fontSize="sm"
-                fontWeight="normal"
-                color={titleColor}
-              >
-                Email
-              </FormLabel>
-              <GradientBorder
-                mb="24px"
-                w={{ base: "100%", lg: "fit-content" }}
-                borderRadius="20px"
-              >
-                <Input
-                  color={titleColor}
-                  bg="rgb(19,21,54)"
-                  border="transparent"
-                  borderRadius="20px"
-                  fontSize="sm"
-                  size="lg"
-                  w={{ base: "100%", md: "346px" }}
-                  maxW="100%"
-                  h="46px"
-                  type="email"
-                  placeholder="Your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </GradientBorder>
-              <FormLabel
-                ms="4px"
-                fontSize="sm"
-                fontWeight="normal"
-                color={titleColor}
-              >
-                Password
-              </FormLabel>
-              <GradientBorder
-                mb="24px"
-                w={{ base: "100%", lg: "fit-content" }}
-                borderRadius="20px"
-              >
-                <Input
-                  color={titleColor}
-                  bg="rgb(19,21,54)"
-                  border="transparent"
-                  borderRadius="20px"
-                  fontSize="sm"
-                  size="lg"
-                  w={{ base: "100%", md: "346px" }}
-                  maxW="100%"
-                  h="46px"
-                  type="password"
-                  placeholder="Your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </GradientBorder>
-              <FormControl display="flex" alignItems="center">
-                <DarkMode>
-                  <Switch id="remember-login" colorScheme="brand" me="10px" />
-                </DarkMode>
-                <FormLabel
-                  htmlFor="remember-login"
-                  mb="0"
-                  ms="1"
-                  fontWeight="normal"
-                  color={titleColor}
-                >
-                  Remember me
-                </FormLabel>
-              </FormControl>
-              <Button
-                variant="brand"
-                fontSize="10px"
-                type="submit"
-                w="100%"
-                maxW="350px"
-                h="45"
-                mb="20px"
-                mt="20px"
-                isLoading={loading}
-              >
-                SIGN IN
-              </Button>
-            </FormControl>
-            <Flex
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-              maxW="100%"
-              mt="0px"
-            >
-              <Text color={textColor} fontWeight="medium">
-                Don&apos;t have an account?
-                <Link
-                  color={titleColor}
-                  as="span"
-                  ms="5px"
-                  href="/signup"
-                  fontWeight="bold"
-                >
-                  Sign Up
-                </Link>
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Box
-          w={{ base: "335px", md: "450px" }}
-          mx={{ base: "auto", lg: "unset" }}
-          ms={{ base: "auto", lg: "auto" }}
-          mb="80px"
-        >
-          <AuthFooter />
-        </Box>
-        <Box
-          display={{ base: "none", lg: "block" }}
-          overflowX="hidden"
-          h="100%"
-          maxW={{ md: "50vw", lg: "50vw" }}
-          minH="100vh"
-          w="960px"
-          position="absolute"
-          left="0px"
-        >
-          <Box
-            bgImage={signInImage}
-            w="100%"
-            h="100%"
-            bgSize="cover"
-            bgPosition="50%"
-            position="absolute"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text
-              textAlign="center"
-              color="white"
-              letterSpacing="8px"
-              fontSize="20px"
-              fontWeight="500"
-            >
-              INSPIRED BY THE FUTURE:
-            </Text>
-            <Text
-              textAlign="center"
-              color="transparent"
-              letterSpacing="8px"
-              fontSize="36px"
-              fontWeight="bold"
-              bgClip="text !important"
-              bg="linear-gradient(94.56deg, #FFFFFF 79.99%, #21242F 102.65%)"
-            >
-              THE VISION UI DASHBOARD
-            </Text>
-          </Box>
-        </Box>
-      </Flex>
-    </Flex>
-  );
+  // ... rest of your JSX
 }
 
 export default SignIn;
