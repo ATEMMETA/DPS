@@ -1,27 +1,6 @@
-import { createClient } from '@vercel/ai';
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { ai } = req.query;
-  let client;
-
-  switch (ai) {
-    case 'grok':
-      client = createClient('xai', { apiKey: process.env.GROK_API_KEY });
-      break;
-    case 'gemini':
-      client = createClient('google', { apiKey: process.env.GEMINI_API_KEY });
-      break;
-    case 'gpt':
-      client = createClient('openai', { apiKey: process.env.GPT_API_KEY });
-      break;
-    case 'serveo':
-      client = createClient('serveo', { apiKey: process.env.SERVEO_API_KEY }); // Adjust provider
-      break;
-    default:
-      return res.status(404).json({ error: 'AI not found' });
-  }
-
-  const { message } = req.body;
-  const response = await client.chat(message);
-  res.json({ reply: response });
+  res.status(200).json({ message: `Chat with ${ai} coming soon!` });
 }
