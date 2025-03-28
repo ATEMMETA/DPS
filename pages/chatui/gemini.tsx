@@ -12,6 +12,11 @@ export default function GeminiHelper() {
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Chakra UI styles (assumed from earlier—fill these in as needed)
+  const textColor = useColorModeValue('gray.800', 'white');
+  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const gray = useColorModeValue('gray.500', 'gray.400');
+
   const handleGenerate = async () => {
     const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
     if (!apiKey) {
@@ -54,10 +59,11 @@ export default function GeminiHelper() {
   return (
     <>
       <Head>
-        {/* ... (Ads) */}
+        {/* Add your ads here if needed */}
+        <title>Gemini AI Helper</title>
       </Head>
       <Flex w="100%" pt={{ base: '70px', md: '0px' }} direction="column" position="relative">
-        {/* ... (Background image) */}
+        <Img src={Bg.src} position="absolute" w="100%" h="100%" opacity="0.1" />
         <Flex
           direction="column"
           mx="auto"
@@ -68,13 +74,13 @@ export default function GeminiHelper() {
           <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center" color={textColor}>
             Gemini AI Helper
           </Text>
-          {/* ... (Ads) */}
+          {/* Add your ads here if needed */}
           <CodeBlock
             code={inputCode || '// Drag or type code here'}
             height="400"
             editable={true}
             onChange={(value) => setInputCode(value)}
-          />
+          /> {/* No children prop—clean per Gemini */}
           {loading && <Text mt={2} color={gray}>Loading...</Text>}
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
@@ -102,6 +108,7 @@ export default function GeminiHelper() {
             mt={4}
             onClick={handleGenerate}
             isLoading={loading}
+            colorScheme="teal"
           >
             Ask Gemini AI
           </Button>
@@ -112,4 +119,4 @@ export default function GeminiHelper() {
       </Flex>
     </>
   );
-          }
+}
