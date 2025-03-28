@@ -13,8 +13,7 @@ import {
   DarkMode,
   useToast,
 } from "@chakra-ui/react";
-import GradientBorder from "components/GradientBorder/GradientBorder";
-import AuthFooter from "components/Footer/AuthFooter";
+import AuthFooter from "components/Footer/AuthFooter"; // Assuming this exists
 import signInImage from "assets/img/signInImage.png";
 import { useRouter } from "next/router";
 
@@ -22,7 +21,6 @@ interface SignInProps {}
 
 interface SignInResponse {
   message: string;
-  // Add other properties if your API returns more data
 }
 
 function SignIn({}: SignInProps) {
@@ -72,7 +70,6 @@ function SignIn({}: SignInProps) {
 
       if (!response.ok) {
         let errorMessage = "Sign-in failed";
-
         if (response.status === 400) {
           errorMessage = "Bad request. Please check your credentials.";
         } else if (response.status === 401) {
@@ -80,7 +77,6 @@ function SignIn({}: SignInProps) {
         } else if (response.status === 500) {
           errorMessage = "Server error. Please try again later.";
         }
-
         const errorData: SignInResponse = await response.json();
         throw new Error(errorData.message || errorMessage);
       }
@@ -108,7 +104,50 @@ function SignIn({}: SignInProps) {
     }
   };
 
-  // ... rest of your JSX
+  return (
+    <Flex position="relative" minH="100vh" align="center" justify="center">
+      <Box
+        w={{ base: "100%", md: "420px" }}
+        p="40px"
+        mx="auto"
+        borderRadius="15px"
+        bg="gray.800"
+      >
+        <Heading color={titleColor} fontSize="32px" mb="10px">
+          Sign In
+        </Heading>
+        <Text mb="20px" color={textColor} fontSize="sm">
+          Enter your email and password to sign in
+        </Text>
+        <FormControl>
+          <FormLabel color={textColor}>Email</FormLabel>
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email"
+            mb="15px"
+          />
+          <FormLabel color={textColor}>Password</FormLabel>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Your password"
+            mb="15px"
+          />
+          <Button
+            isLoading={loading}
+            colorScheme="teal"
+            onClick={handleSignIn}
+            w="100%"
+          >
+            Sign In
+          </Button>
+        </FormControl>
+        <AuthFooter />
+      </Box>
+    </Flex>
+  );
 }
 
 export default SignIn;
