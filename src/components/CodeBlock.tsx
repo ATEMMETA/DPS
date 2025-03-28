@@ -2,8 +2,8 @@ import { StreamLanguage } from '@codemirror/language';
 import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
-import { FC, useState } from 'react';
-import { DndProvider, useDrag, useDrop, ConnectDropTarget } from 'react-dnd';
+import { useState, useRef } from 'react';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -17,7 +17,7 @@ interface DraggedItem {
   text: string;
 }
 
-const DraggableText: FC<{ text: string }> = ({ text }) => {
+const DraggableText = ({ text }: { text: string }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'text',
     item: { text },
@@ -28,11 +28,7 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
 
   return (
     <div
-      ref={(node) => {
-        if (node) {
-          drag(node as HTMLElement);
-        }
-      }}
+      ref={drag}
       style={{
         opacity: isDragging ? 0.5 : 1,
         padding: '10px',
@@ -46,18 +42,33 @@ const DraggableText: FC<{ text: string }> = ({ text }) => {
   );
 };
 
-const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
+const InputDropZone = ({ onDrop }: { onDrop: (text: string) => void }) => {
+  const [inputValue, setInputValue] = useState('');
+  const dropRef = useRef<HTMLDivElement>(null);
+
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'text',
-    drop: (item: DraggedItem) => onDrop(item.text),
+    drop: (item: DraggedItem) => {
+      onDrop(item.text);
+      setInputValue(item.text);
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    onDrop(value);
+  };
+
   return (
     <div
-      ref={drop as unknown as React.RefObject<HTMLDivElement>}
+      ref={(node) => {
+        dropRef.current = node;
+        drop(node);
+      }}
       style={{
         border: `2px dashed ${isOver ? 'green' : 'gray'}`,
         padding: '20px',
@@ -68,7 +79,8 @@ const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
     >
       <p>Drag code here or paste below</p>
       <textarea
-        onChange={(e) => onDrop(e.target.value)}
+        value={inputValue}
+        onChange={handleInputChange}
         placeholder="Or paste code here..."
         style={{ width: '100%', minHeight: '50px' }}
       />
@@ -76,26 +88,12 @@ const InputDropZone: FC<{ onDrop: (text: string) => void }> = ({ onDrop }) => {
   );
 };
 
-const OutputZone: FC<{ output: string }> = ({ output }) => (
-  <div
-    style={{
-      border: '2px solid gray',
-      padding: '20px',
-      minHeight: '100px',
-      backgroundColor: '#fff',
-    }}
-  >
-    <p>Output:</p>
-    <pre>{output || 'Waiting for response...'}</pre>
-  </div>
-);
-
-export const CodeBlock: FC<Props> = ({
+export const CodeBlock = ({
   height,
   code,
   editable = false,
   onChange = () => {},
-}) => {
+}: Props) => {
   const [editorCode, setEditorCode] = useState(code);
 
   const handleCodeChange = (value: string) => {
@@ -107,7 +105,7 @@ export const CodeBlock: FC<Props> = ({
     <DndProvider backend={HTML5Backend}>
       <div>
         <DraggableText text="Sample code: console.log('Hello!')" />
-        <InputDropZone onDrop={(text) => handleCodeChange(text)} />
+        <InputDropZone onDrop={handleCodeChange} />
         <CodeMirror
           value={editorCode}
           height={height}
