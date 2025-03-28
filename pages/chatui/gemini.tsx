@@ -82,22 +82,23 @@ export default function GeminiHelper() {
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
               <Flex align="center" mb="10px">
-                <Flex
-                  borderRadius="full"
-                  justify="center"
-                  align="center"
-                  bg="linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)"
-                  me="20px"
-                  h="40px"
-                  minH="40px"
-                  minW="40px"
-                >
-                  <Icon as={MdAutoAwesome} width="20px" height="20px" color="white" />
-                </Flex>
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Gemini Response:
-                </Text>
-              </Flex>
+              <Flex
+            borderRadius="full"
+            justify="center"
+            align="center"
+    bg="linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)"
+    me="20px"
+    h="40px"
+    minH="40px"
+    minW="40px"
+  >
+    <Icon as={MdAutoAwesome} width="20px" height="20px" color="white" />
+  </Flex>
+  <Text fontSize="lg" fontWeight="bold" color={textColor}>
+    Gemini Response:
+  </Text>
+</Flex>
+              
               <Text color={textColor}>{outputCode}</Text>
             </Box>
           )}
