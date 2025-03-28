@@ -16,11 +16,7 @@ import {
 import GradientBorder from "components/GradientBorder/GradientBorder";
 import AuthFooter from "components/Footer/AuthFooter";
 import signInImage from "assets/img/signInImage.png";
-// In signin.tsx, handleSignIn:
-import { useRouter } from "next/router";
-const router = useRouter();
-// After success:
-router.push("/chatui/grok");
+import { useRouter } from "next/router"; // Import useRouter
 
 interface SignInProps {}
 
@@ -31,6 +27,7 @@ function SignIn({}: SignInProps) {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
+  const router = useRouter(); // Initialize useRouter inside the component
 
   const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
@@ -57,7 +54,7 @@ function SignIn({}: SignInProps) {
         isClosable: true,
       });
 
-      // Redirect or reset form (e.g., to /chatui/grok)
+      router.push("/chatui/grok"); // Redirect after successful sign-in
       setEmail("");
       setPassword("");
     } catch (error: any) {
@@ -73,7 +70,8 @@ function SignIn({}: SignInProps) {
     }
   };
 
-  return (
+
+ return (
     <Flex position="relative">
       <Flex
         minH="100vh"
