@@ -3,16 +3,18 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { Box, Input, Button, VStack, Text, Heading } from '@chakra-ui/react';
 
+type Message = { role: string; content: string }; // Define your message
+
 export default function ChatUIPage() {
   const router = useRouter();
   const { page } = router.query;
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]); // Type it!
   const [input, setInput] = useState('');
 
   const sendMessage = async () => {
     if (!input || !page) return;
     const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]); // TS happy now
     setInput('');
 
     const res = await fetch(`/api/chat/${page}`, {
