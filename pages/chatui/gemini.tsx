@@ -12,49 +12,46 @@ export default function GeminiHelper() {
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // ... (Chakra UI styles omitted for brevity)
-
   const handleGenerate = async () => {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY; // Public env var in Next.js
-  if (!apiKey) {
-    alert('Gemini API key missing!');
-    setLoading(false);
-    return;
-  }
-  if (!inputCode) {
-    alert('Please enter your code.');
-    return;
-  }
-  setOutputCode(' ');
-  setLoading(true);
-
-  try {
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey as string, // Assert string after check
-      },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: `Analyze this code: ${inputCode}` }] }],
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Something went wrong with Gemini.');
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (!apiKey) {
+      alert('Gemini API key missing!');
+      setLoading(false);
+      return;
     }
+    if (!inputCode) {
+      alert('Please enter your code.');
+      return;
+    }
+    setOutputCode(' ');
+    setLoading(true);
 
-    const data = await response.json();
-    setOutputCode(data.candidates[0].content.parts[0].text);
-    setLoading(false);
-  } catch (error: any) {
-    setLoading(false);
-    alert(error.message);
-  }
-};
+    try {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey as string,
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Analyze this code: ${inputCode}` }] }],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Something went wrong with Gemini.');
+      }
+
+      const data = await response.json();
+      setOutputCode(data.candidates[0].content.parts[0].text);
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      alert(error.message);
+    }
+  };
 
   return (
-    
     <>
       <Head>
         {/* ... (Ads) */}
@@ -82,29 +79,27 @@ export default function GeminiHelper() {
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
               <Flex align="center" mb="10px">
-              <Flex
-            borderRadius="full"
-            justify="center"
-            align="center"
-    bg="linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)"
-    me="20px"
-    h="40px"
-    minH="40px"
-    minW="40px"
-  >
-    <Icon as={MdAutoAwesome} width="20px" height="20px" color="white" />
-  </Flex>
-  <Text fontSize="lg" fontWeight="bold" color={textColor}>
-    Gemini Response:
-  </Text>
-</Flex>
-              
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg="linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)"
+                  me="20px"
+                  h="40px"
+                  minH="40px"
+                  minW="40px"
+                >
+                  <Icon as={MdAutoAwesome} width="20px" height="20px" color="white" />
+                </Flex>
+                <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                  Gemini Response:
+                </Text>
+              </Flex>
               <Text color={textColor}>{outputCode}</Text>
             </Box>
           )}
           <Button
             mt={4}
-            // ... (Button styles)
             onClick={handleGenerate}
             isLoading={loading}
           >
