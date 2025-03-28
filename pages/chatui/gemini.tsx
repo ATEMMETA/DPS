@@ -1,6 +1,5 @@
 'use client';
 /*eslint-disable*/
-
 import { CodeBlock } from '@/components/CodeBlock';
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -13,43 +12,49 @@ export default function GeminiHelper() {
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // ... (Chakra UI styles)
+  // ... (Chakra UI styles omitted for brevity)
 
   const handleGenerate = async () => {
-    const apiKey = process.env.GEMINI_API_KEY; // Use environment variable
-    if (!inputCode) {
-      alert('Please enter your code.');
-      return;
+  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY; // Public env var in Next.js
+  if (!apiKey) {
+    alert('Gemini API key missing!');
+    setLoading(false);
+    return;
+  }
+  if (!inputCode) {
+    alert('Please enter your code.');
+    return;
+  }
+  setOutputCode(' ');
+  setLoading(true);
+
+  try {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey as string, // Assert string after check
+      },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: `Analyze this code: ${inputCode}` }] }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong with Gemini.');
     }
-    setOutputCode(' ');
-    setLoading(true);
 
-    try {
-      const response = await fetch('YOUR_GEMINI_API_ENDPOINT', { // Replace with gemini api endpoint
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey, // Replace with correct header
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Analyze this code: ${inputCode}` }] }], // Replace with correct payload
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Something went wrong with Gemini.');
-      }
-
-      const data = await response.json();
-      setOutputCode(data.candidates[0].content.parts[0].text); // Adjust to gemini response
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      alert(error.message);
-    }
-  };
+    const data = await response.json();
+    setOutputCode(data.candidates[0].content.parts[0].text);
+    setLoading(false);
+  } catch (error: any) {
+    setLoading(false);
+    alert(error.message);
+  }
+};
 
   return (
+    
     <>
       <Head>
         {/* ... (Ads) */}
