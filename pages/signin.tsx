@@ -13,7 +13,7 @@ import {
   DarkMode,
   useToast,
 } from "@chakra-ui/react";
-import AuthFooter from "src/components/footer/authfooter";
+import AuthFooter from "components/footer/authfooter"; // Fixed path, no src/
 import signInImage from "assets/img/signInImage.png";
 import { useRouter } from "next/router";
 
@@ -144,7 +144,7 @@ function SignIn({}: SignInProps) {
             Sign In
           </Button>
         </FormControl>
-        <AuthFooter />
+        <AuthFooter /> {/* Matches import */}
       </Box>
     </Flex>
   );
