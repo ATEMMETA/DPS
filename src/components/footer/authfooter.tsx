@@ -1,6 +1,6 @@
 import { Box, Text, Link } from "@chakra-ui/react";
 
-const authfooter = () => (
+const AuthFooter = () => ( // Capitalize function name
   <Box textAlign="center" mt="20px">
     <Text fontSize="xs" color="gray.400">
       © {new Date().getFullYear()} Your App. All rights reserved.
@@ -11,4 +11,4 @@ const authfooter = () => (
   </Box>
 );
 
-export default authfooter;
+export default AuthFooter; // Capitalize export
