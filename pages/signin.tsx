@@ -13,7 +13,7 @@ import {
   DarkMode,
   useToast,
 } from "@chakra-ui/react";
-import AuthFooter from "src/components/footer/AuthFooter";
+import AuthFooter from "src/components/footer/authfooter";
 import signInImage from "assets/img/signInImage.png";
 import { useRouter } from "next/router";
 
