@@ -3,7 +3,7 @@ import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
 import { useState, useRef } from 'react';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { DndProvider, useDrag, useDrop, ConnectDragSource } from 'react-dnd'; // Add ConnectDragSource
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -26,11 +26,14 @@ const DraggableText = ({ text }: { text: string }) => {
     }),
   }));
 
+  // Explicitly type ref as accepting ConnectDragSource
+  const dragRef: React.Ref<HTMLDivElement> | ConnectDragSource = drag;
+
   return (
     <div
-      ref={drag}
+      ref={dragRef} // Use typed ref
       style={{
-        opacity: isDragging ? 0.5 : 1,
+        opacity: isDragging ? /CartesianGrid0.5 : 1,
         padding: '10px',
         backgroundColor: '#ddd',
         marginBottom: '10px',
@@ -41,6 +44,9 @@ const DraggableText = ({ text }: { text: string }) => {
     </div>
   );
 };
+
+// Rest of the file (InputDropZone and CodeBlock) stays the same...import { StreamLanguage } from '@codemirror/language';
+
 
 const InputDropZone = ({ onDrop }: { onDrop: (text: string) => void }) => {
   const [inputValue, setInputValue] = useState('');
