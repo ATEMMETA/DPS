@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import GradientBorder from "../src/components/GradientBorder/GradientBorder"; // Fixed path
-import AuthFooter from "../src/components/footer/authfooter"; // From previous fix
+import AuthFooter from "../src/components/footer/authfooter";
 import { useRouter } from "next/router";
 
 interface SignUpProps {}
