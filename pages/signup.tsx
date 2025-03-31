@@ -1,157 +1,86 @@
 import React, { FormEvent, useState } from "react";
 import {
+  Box,
   Flex,
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
-  Switch,
-  DarkMode,
+  Link,
   Text,
-  useToast, // Import useToast
+  useToast,
 } from "@chakra-ui/react";
-import GradientBorder from "components/GradientBorder/GradientBorder";
+import GradientBorder from "../src/components/GradientBorder/GradientBorder"; // Fixed path
+import AuthFooter from "../src/components/footer/authfooter"; // From previous fix
+import { useRouter } from "next/router";
 
 interface SignUpProps {}
+interface SignUpResponse { message: string; }
 
 function SignUp({}: SignUpProps) {
   const titleColor = "white";
-  const [name, setName] = useState<string>("");
+  const textColor = "gray.400";
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
-  const toast = useToast(); // Initialize useToast
+  const [loading, setLoading] = useState<boolean>(false);
+  const toast = useToast();
+  const router = useRouter();
 
   const handleSignUp = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Start loading
-
+    if (!email || !password) {
+      toast({ title: "Validation Error", description: "Please enter both email and password.", status: "warning", duration: 3000, isClosable: true });
+      return;
+    }
+    if (!email.includes("@")) {
+      toast({ title: "Validation Error", description: "Please enter a valid email address.", status: "warning", duration: 3000, isClosable: true });
+      return;
+    }
+    setLoading(true);
     try {
-      const response = await fetch("/api/signup", { // Replace with your API endpoint
+      const response = await fetch("/api/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Sign-up failed");
+        let errorMessage = "Sign-up failed";
+        if (response.status === 400) errorMessage = "Bad request. Please check your inputs.";
+        else if (response.status === 409) errorMessage = "User already exists.";
+        else if (response.status === 500) errorMessage = "Server error. Please try again later.";
+        const errorData: SignUpResponse = await response.json();
+        throw new Error(errorData.message || errorMessage);
       }
-
-      toast({
-        title: "Sign-up successful",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      // Redirect user or clear form
-      setName("");
+      toast({ title: "Sign-up successful", status: "success", duration: 3000, isClosable: true });
+      router.push("/signin");
       setEmail("");
       setPassword("");
     } catch (error: any) {
-      toast({
-        title: "Sign-up error",
-        description: error.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast({ title: "Sign-up error", description: error.message, status: "error", duration: 3000, isClosable: true });
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
   return (
-    <Flex position="relative" overflow={{ lg: "hidden" }}>
-      <FormControl as="form" onSubmit={handleSignUp}>
-        <FormLabel color={titleColor} ms="4px" fontSize="sm" fontWeight="normal">
-          Name
-        </FormLabel>
-        <GradientBorder mb="24px" h="50px" w={{ base: "100%", lg: "fit-content" }} borderRadius="20px">
-          <Input
-            color={titleColor}
-            bg={{ base: "rgb(19,21,54)" }}
-            border="transparent"
-            borderRadius="20px"
-            fontSize="sm"
-            size="lg"
-            w={{ base: "100%", md: "346px" }}
-            maxW="100%"
-            h="46px"
-            type="text"
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </GradientBorder>
-        <FormLabel color={titleColor} ms="4px" fontSize="sm" fontWeight="normal">
-          Email
-        </FormLabel>
-        <GradientBorder mb="24px" h="50px" w={{ base: "100%", lg: "fit-content" }} borderRadius="20px">
-          <Input
-            color={titleColor}
-            bg={{ base: "rgb(19,21,54)" }}
-            border="transparent"
-            borderRadius="20px"
-            fontSize="sm"
-            size="lg"
-            w={{ base: "100%", md: "346px" }}
-            maxW="100%"
-            h="46px"
-            type="email"
-            placeholder="Your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </GradientBorder>
-        <FormLabel color={titleColor} ms="4px" fontSize="sm" fontWeight="normal">
-          Password
-        </FormLabel>
-        <GradientBorder mb="24px" h="50px" w={{ base: "100%", lg: "fit-content" }} borderRadius="20px">
-          <Input
-            color={titleColor}
-            bg={{ base: "rgb(19,21,54)" }}
-            border="transparent"
-            borderRadius="20px"
-            fontSize="sm"
-            size="lg"
-            w={{ base: "100%", md: "346px" }}
-            maxW="100%"
-            h="46px"
-            type="password"
-            placeholder="Your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </GradientBorder>
-        <FormControl display="flex" alignItems="center" mb="24px">
-          <DarkMode>
-            <Switch id="remember-login" colorScheme="brand" me="10px" />
-          </DarkMode>
-          <FormLabel color={titleColor} htmlFor="remember-login" mb="0" fontWeight="normal">
-            Remember me
-          </FormLabel>
-        </FormControl>
-        <Button
-          variant="brand"
-          fontSize="10px"
-          type="submit"
-          w="100%"
-          maxW="350px"
-          h="45"
-          mb="20px"
-          mt="20px"
-          isLoading={loading} // Show loading state
-        >
-          SIGN UP
-        </Button>
-      </FormControl>
+    <Flex position="relative" minH="100vh" align="center" justify="center">
+      <GradientBorder>
+        <Box w={{ base: "100%", md: "420px" }} p="40px" mx="auto" borderRadius="15px" bg="gray.800">
+          <Heading color={titleColor} fontSize="32px" mb="10px">Sign Up</Heading>
+          <Text mb="20px" color={textColor} fontSize="sm">Create an account</Text>
+          <FormControl>
+            <FormLabel color={textColor}>Email</FormLabel>
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" mb="15px" />
+            <FormLabel color={textColor}>Password</FormLabel>
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password" mb="15px" />
+            <Button isLoading={loading} colorScheme="teal" onClick={handleSignUp} w="100%">Sign Up</Button>
+          </FormControl>
+          <AuthFooter />
+        </Box>
+      </GradientBorder>
     </Flex>
   );
 }
 
 export default SignUp;
-          
