@@ -3,6 +3,10 @@
     {
       "src": "src/pages/**/*",
       "use": "@vercel/next"
+    },
+    {
+      "src": "src/pages/api/**/*",
+      "use": "@vercel/node"
     }
   ],
   "root": "src/"
