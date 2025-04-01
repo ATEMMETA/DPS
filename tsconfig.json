@@ -17,14 +17,15 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "noUncheckedIndexedAccess": true // Dummy change
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "declarations.d.ts" // Add this if in root
+    "declarations.d.ts"
   ],
   "exclude": ["node_modules"]
 }
