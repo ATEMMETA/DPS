@@ -3,7 +3,7 @@ import { go } from '@codemirror/legacy-modes/mode/go';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import CodeMirror from '@uiw/react-codemirror';
 import { useState, useRef } from 'react';
-import { DndProvider, useDrag, useDrop, ConnectDragSource } from 'react-dnd';
+import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface Props {
@@ -18,21 +18,19 @@ interface DraggedItem {
 }
 
 const DraggableText = ({ text }: { text: string }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag<DraggedItem, unknown, { isDragging: boolean }>(() => ({
     type: 'text',
     item: { text },
-    collect: (monitor) => ({
+    collect: (monitor: DragSourceMonitor<DraggedItem, unknown>) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
 
-  const dragRef: React.Ref<HTMLDivElement> | ConnectDragSource = drag;
-
   return (
     <div
-      ref={dragRef}
+      ref={drag}
       style={{
-        opacity: isDragging ? 0.5 : 1, // Fixed: simple number, no regex nonsense
+        opacity: isDragging ? 0.5 : 1,
         padding: '10px',
         backgroundColor: '#ddd',
         marginBottom: '10px',
