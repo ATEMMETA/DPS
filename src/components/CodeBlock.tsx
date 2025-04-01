@@ -122,4 +122,4 @@ export const CodeBlock = ({
       </div>
     </DndProvider>
   );
-};
+}
