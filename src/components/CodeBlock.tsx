@@ -28,7 +28,11 @@ const DraggableText = ({ text }: { text: string }) => {
 
   return (
     <div
-      ref={drag}
+      ref={(node) => {
+        if (node) {
+          drag(node);
+        }
+      }}
       style={{
         opacity: isDragging ? 0.5 : 1,
         padding: '10px',
@@ -122,4 +126,4 @@ export const CodeBlock = ({
       </div>
     </DndProvider>
   );
-}
+};
