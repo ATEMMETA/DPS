@@ -40,7 +40,8 @@
     "typescript": "^5.4.0",
     "web-vitals": "^3.5.0",
     "react-dnd": "^16.0.1",
-    "react-dnd-html5-backend": "^16.0.1"
+    "react-dnd-html5-backend": "^16.0.1",
+    "camelcase-css": "^2.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.0",
