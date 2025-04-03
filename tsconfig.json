@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "esnext", // Was "nodenext"
+    "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -27,5 +27,5 @@
     ".next/types/**/*.ts",
     "declarations.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "app_disabled"] // Add this
 }
