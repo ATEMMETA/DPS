@@ -1,5 +1,4 @@
 'use client';
-/*eslint-disable*/
 import { CodeBlock } from '@/components/CodeBlock';
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ export default function GeminiHelper() {
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Chakra UI styles (assumed from earlier—fill these in as needed)
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
   const gray = useColorModeValue('gray.500', 'gray.400');
@@ -59,7 +57,6 @@ export default function GeminiHelper() {
   return (
     <>
       <Head>
-        {/* Add your ads here if needed */}
         <title>Gemini AI Helper</title>
       </Head>
       <Flex w="100%" pt={{ base: '70px', md: '0px' }} direction="column" position="relative">
@@ -74,13 +71,12 @@ export default function GeminiHelper() {
           <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center" color={textColor}>
             Gemini AI Helper
           </Text>
-          {/* Add your ads here if needed */}
           <CodeBlock
             code={inputCode || '// Drag or type code here'}
-            height="400"
+            height="400" // String literal per CodeBlock props
             editable={true}
             onChange={(value) => setInputCode(value)}
-          /> {/* No children prop—clean per Gemini */}
+          />
           {loading && <Text mt={2} color={gray}>Loading...</Text>}
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
