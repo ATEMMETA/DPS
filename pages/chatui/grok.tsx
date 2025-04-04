@@ -1,7 +1,8 @@
 'use client';
 /*eslint-disable*/
 
-import { CodeBlock } from '@/components/CodeBlock';
+import CodeBlock from '@/components/CodeBlock'; // Default import
+
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
@@ -150,4 +151,4 @@ export default function GrokHelper() {
       </Flex>
     </>
   );
-      }
+}
