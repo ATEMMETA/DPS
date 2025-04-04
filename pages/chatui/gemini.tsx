@@ -1,5 +1,6 @@
 'use client';
-import { CodeBlock } from '@/components/CodeBlock';
+import { CodeBlock } from '../../src/components/CodeBlock'; // Relative from pages/chatui/
+
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
@@ -7,6 +8,7 @@ import Bg from '../../public/img/chat/bg-image.png';
 import Head from 'next/head';
 
 export default function GeminiHelper() {
+  
   const [inputCode, setInputCode] = useState<string>('');
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
