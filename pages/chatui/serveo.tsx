@@ -1,14 +1,15 @@
 'use client';
 /*eslint-disable*/
 
-import { CodeBlock } from '@/components/CodeBlock';
+import CodeBlock from '@/components/CodeBlock'; // Default import
+
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
 import Bg from '../../public/img/chat/bg-image.png';
 import Head from 'next/head';
 
-export default function GrokHelper() {
+export default function ServeoHelper() { // Renamed for clarity—update if swapping AI
   const [inputCode, setInputCode] = useState<string>('');
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,7 +82,7 @@ export default function GrokHelper() {
           maxW="1000px"
         >
           <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center" color={textColor}>
-            Grok Helper - Dependency Checker
+            Serveo Helper - Dependency Checker
           </Text>
           <Box mb={4}>
             <ins
@@ -150,4 +151,4 @@ export default function GrokHelper() {
       </Flex>
     </>
   );
-          }
+}
