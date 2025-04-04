@@ -1,5 +1,5 @@
 'use client';
-import CodeBlock from '../../src/components/CodeBlock'; // Default import—should work now
+import CodeBlock from '@/components/CodeBlock'; // Default import—should be fine
 
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -116,4 +116,4 @@ export default function GeminiHelper() {
       </Flex>
     </>
   );
-}
+              }
