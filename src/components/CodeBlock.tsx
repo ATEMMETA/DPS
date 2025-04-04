@@ -1,120 +1,129 @@
-'use client';
-import dynamic from 'next/dynamic';
-import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
-import { useState } from 'react';
-import { MdAutoAwesome } from 'react-icons/md';
-import Bg from '../../public/img/chat/bg-image.png';
-import Head from 'next/head';
+import { StreamLanguage } from '@codemirror/language';
+import { go } from '@codemirror/legacy-modes/mode/go';
+import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
+import CodeMirror from '@uiw/react-codemirror';
+import { useState, useRef } from 'react';
+import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const CodeBlock = dynamic(() => import('src/components/CodeBlock'), { ssr: false });
+interface Props {
+  code: string;
+  height: string;
+  editable?: boolean;
+  onChange?: (value: string) => void;
+}
 
-export default function GeminiHelper() {
-  const [inputCode, setInputCode] = useState<string>('');
-  const [outputCode, setOutputCode] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+interface DraggedItem {
+  text: string;
+}
 
-  const textColor = useColorModeValue('gray.800', 'white');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
-  const gray = useColorModeValue('gray.500', 'gray.400');
+const DraggableText = ({ text }: { text: string }) => {
+  const [{ isDragging }, drag] = useDrag<DraggedItem, unknown, { isDragging: boolean }>(() => ({
+    type: 'text',
+    item: { text },
+    collect: (monitor: DragSourceMonitor<DraggedItem, unknown>) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
 
-  const handleGenerate = async () => {
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    if (!apiKey) {
-      alert('Gemini API key missing!');
-      setLoading(false);
-      return;
-    }
-    if (!inputCode) {
-      alert('Please enter your code.');
-      return;
-    }
-    setOutputCode(' ');
-    setLoading(true);
+  return (
+    <div
+      ref={(node) => {
+        if (node) {
+          drag(node);
+        }
+      }}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        padding: '10px',
+        backgroundColor: '#ddd',
+        marginBottom: '10px',
+        cursor: 'move',
+      }}
+    >
+      {text}
+    </div>
+  );
+};
 
-    try {
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey as string,
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Analyze this code: ${inputCode}` }] }],
-        }),
-      });
+const InputDropZone = ({ onDrop }: { onDrop: (text: string) => void }) => {
+  const [inputValue, setInputValue] = useState('');
+  const dropRef = useRef<HTMLDivElement>(null);
 
-      if (!response.ok) {
-        throw new Error('Something went wrong with Gemini.');
-      }
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'text',
+    drop: (item: DraggedItem) => {
+      onDrop(item.text);
+      setInputValue(item.text);
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
 
-      const data = await response.json();
-      setOutputCode(data.candidates[0].content.parts[0].text);
-      setLoading(false);
-    } catch (error: any) {
-      setLoading(false);
-      alert(error.message);
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    onDrop(value);
   };
 
   return (
-    <>
-      <Head>
-        <title>Gemini AI Helper</title>
-      </Head>
-      <Flex w="100%" pt={{ base: '70px', md: '0px' }} direction="column" position="relative">
-        <Img src={Bg.src} position="absolute" w="100%" h="100%" opacity="0.1" />
-        <Flex
-          direction="column"
-          mx="auto"
-          w={{ base: '100%', md: '100%', xl: '100%' }}
-          minH={{ base: '75vh', '2xl': '85vh' }}
-          maxW="1000px"
-        >
-          <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center" color={textColor}>
-            Gemini AI Helper
-          </Text>
-          <CodeBlock
-            code={inputCode || '// Drag or type code here'}
-            height="400"
-            editable={true}
-            onChange={(value) => setInputCode(value)}
-          />
-          {loading && <Text mt={2} color={gray}>Loading...</Text>}
-          {outputCode && (
-            <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
-              <Flex align="center" mb="10px">
-                <Flex
-                  borderRadius="full"
-                  justify="center"
-                  align="center"
-                  bg="linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)"
-                  me="20px"
-                  h="40px"
-                  minH="40px"
-                  minW="40px"
-                >
-                  <Icon as={MdAutoAwesome} width="20px" height="20px" color="white" />
-                </Flex>
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Gemini Response:
-                </Text>
-              </Flex>
-              <Text color={textColor}>{outputCode}</Text>
-            </Box>
-          )}
-          <Button
-            mt={4}
-            onClick={handleGenerate}
-            isLoading={loading}
-            colorScheme="teal"
-          >
-            Ask Gemini AI
-          </Button>
-          <Text fontSize="xs" textAlign="center" color={gray} mt="20px">
-            Powered by Google’s Gemini. Results may vary.
-          </Text>
-        </Flex>
-      </Flex>
-    </>
+    <div
+      ref={(node) => {
+        dropRef.current = node;
+        drop(node);
+      }}
+      style={{
+        border: `2px dashed ${isOver ? 'green' : 'gray'}`,
+        padding: '20px',
+        marginBottom: '20px',
+        minHeight: '100px',
+        backgroundColor: isOver ? '#e0ffe0' : '#f0f0f0',
+      }}
+    >
+      <p>Drag code here or paste below</p>
+      <textarea
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="Or paste code here..."
+        style={{ width: '100%', minHeight: '50px' }}
+      />
+    </div>
   );
-}
+};
+
+export const CodeBlock = ({
+  height,
+  code,
+  editable = false,
+  onChange = () => {},
+}: Props) => {
+  const [editorCode, setEditorCode] = useState(code);
+
+  const handleCodeChange = (value: string) => {
+    setEditorCode(value);
+    onChange(value);
+  };
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div>
+        <DraggableText text="Sample code: console.log('Hello!')" />
+        <InputDropZone onDrop={handleCodeChange} />
+        <CodeMirror
+          value={editorCode}
+          height={height}
+          theme={tokyoNight}
+          extensions={[StreamLanguage.define(go)]}
+          onChange={handleCodeChange}
+          editable={editable}
+          basicSetup={{
+            lineNumbers: true,
+            highlightActiveLine: true,
+            bracketMatching: true,
+          }}
+        />
+      </div>
+    </DndProvider>
+  );
+};
