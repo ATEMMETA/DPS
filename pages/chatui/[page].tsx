@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation'; // Fixed import
+import { useRouter } from 'next/router'; // Correct import for Client Components
 import { useState } from 'react';
 import { Box, Input, Button, VStack, Text, Heading } from '@chakra-ui/react';
 
