@@ -1,5 +1,5 @@
 'use client';
-import CodeBlock from '../../src/components/CodeBlock'; // Default import
+import CodeBlock from '../../src/components/CodeBlock'; // Default import—should work now
 
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
