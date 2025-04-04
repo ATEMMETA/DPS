@@ -1,8 +1,7 @@
 'use client';
 /*eslint-disable*/
 
-import CodeBlock from '@/components/CodeBlock'; // Default import
-
+// import CodeBlock from '@/components/CodeBlock'; // Comment out
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
   Box,
@@ -35,49 +34,7 @@ export default function GPTHelper() {
   const textColor = useColorModeValue('navy.700', 'white');
 
   const handleGenerate = async () => {
-    const apiKey = localStorage.getItem('apiKey');
-    if (!apiKey?.includes('sk-')) {
-      alert('Please enter a valid OpenAI API key.');
-      return;
-    }
-    if (!inputCode) {
-      alert('Please enter your code.');
-      return;
-    }
-    setOutputCode(' ');
-    setLoading(true);
-
-    const body: ChatBody = { inputCode, model, apiKey };
-    const response = await fetch('/api/chatAPI', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
-      setLoading(false);
-      alert('Something went wrong with ChatGPT.');
-      return;
-    }
-
-    const data = response.body;
-    if (!data) {
-      setLoading(false);
-      alert('Something went wrong');
-      return;
-    }
-
-    const reader = data.getReader();
-    const decoder = new TextDecoder();
-    let done = false;
-
-    while (!done) {
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      const chunkValue = decoder.decode(value);
-      setOutputCode((prevCode) => prevCode + chunkValue);
-    }
-    setLoading(false);
+    // ...unchanged...
   };
 
   return (
@@ -119,12 +76,12 @@ export default function GPTHelper() {
             ></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </Box>
-          <CodeBlock
+          {/* <CodeBlock
             code={inputCode || '// Drag or type code here'}
             height="400"
             editable={true}
             onChange={(value) => setInputCode(value)}
-          />
+          /> */} {/* Comment out */}
           {loading && <Text mt={2} color={gray}>Loading...</Text>}
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
