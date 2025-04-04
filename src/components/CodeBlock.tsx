@@ -6,7 +6,7 @@ import { MdAutoAwesome } from 'react-icons/md';
 import Bg from '../../public/img/chat/bg-image.png';
 import Head from 'next/head';
 
-const CodeBlock = dynamic(() => import('@/components/CodeBlock'), { ssr: false });
+const CodeBlock = dynamic(() => import('src/components/CodeBlock'), { ssr: false });
 
 export default function GeminiHelper() {
   const [inputCode, setInputCode] = useState<string>('');
