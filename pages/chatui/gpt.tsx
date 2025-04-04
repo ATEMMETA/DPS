@@ -1,7 +1,8 @@
 'use client';
 /*eslint-disable*/
 
-import { CodeBlock } from '@/components/CodeBlock';
+import CodeBlock from '@/components/CodeBlock'; // Default import
+
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
   Box,
@@ -174,4 +175,4 @@ export default function GPTHelper() {
       </Flex>
     </>
   );
-      }
+}
