@@ -92,7 +92,7 @@ const InputDropZone = ({ onDrop }: { onDrop: (text: string) => void }) => {
   );
 };
 
-export const CodeBlock = ({
+const CodeBlock = ({
   height,
   code,
   editable = false,
@@ -127,3 +127,5 @@ export const CodeBlock = ({
     </DndProvider>
   );
 };
+
+export default CodeBlock; // Default export—ensure this sticks!
