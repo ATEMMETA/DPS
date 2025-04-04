@@ -1,5 +1,5 @@
 'use client';
-import { CodeBlock } from '../../src/components/CodeBlock'; // Relative from pages/chatui/
+import CodeBlock from '../../src/components/CodeBlock'; // Default import
 
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -8,7 +8,6 @@ import Bg from '../../public/img/chat/bg-image.png';
 import Head from 'next/head';
 
 export default function GeminiHelper() {
-  
   const [inputCode, setInputCode] = useState<string>('');
   const [outputCode, setOutputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,7 +74,7 @@ export default function GeminiHelper() {
           </Text>
           <CodeBlock
             code={inputCode || '// Drag or type code here'}
-            height="400" // String literal per CodeBlock props
+            height="400"
             editable={true}
             onChange={(value) => setInputCode(value)}
           />
