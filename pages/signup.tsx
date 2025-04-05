@@ -29,9 +29,10 @@ function SignUp({}: SignUpProps) {
   const toast = useToast();
   const router = useRouter();
 
+  // Use the brand colors from the theme for the background gradient
   const bgGradient = useColorModeValue(
-    'linear(to-r, #4A25E1, #7B5AFF)',
-    'linear(to-r, #4A25E1, #7B5AFF)'
+    'linear(to-r, brand.500, brand.600)',
+    'linear(to-r, brand.500, brand.600)'
   );
 
   const handleSignUp = async (e: FormEvent) => {
