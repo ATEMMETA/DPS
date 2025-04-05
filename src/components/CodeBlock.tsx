@@ -1,6 +1,4 @@
-import { StreamLanguage } from '@codemirror/language';
-import { go } from '@codemirror/legacy-modes/mode/go';
-import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
+'use client';
 import CodeMirror from '@uiw/react-codemirror';
 import { useState, useRef } from 'react';
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
@@ -113,8 +111,8 @@ const CodeBlock = ({
         <CodeMirror
           value={editorCode}
           height={height}
-          theme={tokyoNight}
-          extensions={[StreamLanguage.define(go)]}
+          // theme={tokyoNight}
+          // extensions={[StreamLanguage.define(go)]}
           onChange={handleCodeChange}
           editable={editable}
           basicSetup={{
@@ -128,4 +126,4 @@ const CodeBlock = ({
   );
 };
 
-export default CodeBlock; // Default export—ensure this sticks!
+export default CodeBlock;
