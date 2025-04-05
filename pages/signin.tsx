@@ -1,83 +1,61 @@
-import React, { FormEvent, useState } from "react";
-import {
-  Box,
-  Flex,
-  Button,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
-import AuthFooter from "../src/components/footer/authfooter"; // Fixed path
-import { useRouter } from "next/router";
+'use client';
+import { Box, Button, Flex, Input, Text, useColorModeValue } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // For redirect
+import Head from 'next/head';
 
-interface SignInProps {}
-interface SignInResponse { message: string; }
-
-function SignIn({}: SignInProps) {
-  const titleColor = "white";
-  const textColor = "gray.400";
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const toast = useToast();
+export default function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSignIn = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
-      toast({ title: "Validation Error", description: "Please enter both email and password.", status: "warning", duration: 3000, isClosable: true });
-      return;
-    }
-    if (!email.includes("@")) {
-      toast({ title: "Validation Error", description: "Please enter a valid email address.", status: "warning", duration: 3000, isClosable: true });
-      return;
-    }
-    setLoading(true);
-    try {
-      const response = await fetch("/api/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!response.ok) {
-        let errorMessage = "Sign-in failed";
-        if (response.status === 400) errorMessage = "Bad request. Please check your credentials.";
-        else if (response.status === 401) errorMessage = "Unauthorized. Invalid email or password.";
-        else if (response.status === 500) errorMessage = "Server error. Please try again later.";
-        const errorData: SignInResponse = await response.json();
-        throw new Error(errorData.message || errorMessage);
-      }
-      toast({ title: "Sign-in successful", status: "success", duration: 3000, isClosable: true });
-      router.push("/chatui/grok");
-      setEmail("");
-      setPassword("");
-    } catch (error: any) {
-      toast({ title: "Sign-in error", description: error.message, status: "error", duration: 3000, isClosable: true });
-    } finally {
-      setLoading(false);
+  const bgGradient = useColorModeValue(
+    'linear(to-r, brand.500, brand.600)',
+    'linear(to-r, #4A25E1, #7B5AFF)'
+  );
+
+  const handleSignIn = () => {
+    // Dummy credentials
+    const dummyEmail = 'test@example.com';
+    const dummyPassword = 'password123';
+
+    if (email === dummyEmail && password === dummyPassword) {
+      // Fake auth success
+      localStorage.setItem('isAuthenticated', 'true'); // Simple flag
+      router.push('/chatui/grok'); // Redirect to a main page
+    } else {
+      setError('Invalid email or password—try test@example.com / password123');
     }
   };
 
   return (
-    <Flex position="relative" minH="100vh" align="center" justify="center">
-      <Box w={{ base: "100%", md: "420px" }} p="40px" mx="auto" borderRadius="15px" bg="gray.800">
-        <Heading color={titleColor} fontSize="32px" mb="10px">Sign In</Heading>
-        <Text mb="20px" color={textColor} fontSize="sm">Enter your email and password to sign in</Text>
-        <FormControl>
-          <FormLabel color={textColor}>Email</FormLabel>
-          <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" mb="15px" />
-          <FormLabel color={textColor}>Password</FormLabel>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password" mb="15px" />
-          <Button isLoading={loading} colorScheme="teal" onClick={handleSignIn} w="100%">Sign In</Button>
-        </FormControl>
-        <AuthFooter />
-      </Box>
-    </Flex>
+    <>
+      <Head>
+        <title>Sign In</title>
+      </Head>
+      <Flex direction="column" align="center" justify="center" minH="100vh" bgGradient={bgGradient}>
+        <Box p={8} borderWidth={1} borderRadius={8} boxShadow="lg" bg="white">
+          <Text fontSize="2xl" mb={4}>Sign In</Text>
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            mb={4}
+          />
+          <Input
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            mb={4}
+          />
+          {error && <Text color="red.500" mb={4}>{error}</Text>}
+          <Button colorScheme="teal" onClick={handleSignIn}>
+            Sign In
+          </Button>
+        </Box>
+      </Flex>
+    </>
   );
 }
-
-export default SignIn;
