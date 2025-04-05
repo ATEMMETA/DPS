@@ -1,3 +1,4 @@
+'use client';
 import React, { FormEvent, useState } from "react";
 import {
   Box,
@@ -7,25 +8,31 @@ import {
   FormLabel,
   Heading,
   Input,
-  Link,
   Text,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import GradientBorder from "../src/components/GradientBorder/GradientBorder"; // Fixed path
 import AuthFooter from "../src/components/footer/authfooter";
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
 interface SignUpProps {}
 interface SignUpResponse { message: string; }
 
 function SignUp({}: SignUpProps) {
-  const titleColor = "white";
-  const textColor = "gray.400";
+  const titleColor = useColorModeValue("white", "white"); // Adjust as needed for dark mode
+  const textColor = useColorModeValue("gray.400", "gray.400");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const router = useRouter();
+
+  const bgGradient = useColorModeValue(
+    'linear(to-r, #4A25E1, #7B5AFF)',
+    'linear(to-r, #4A25E1, #7B5AFF)'
+  );
 
   const handleSignUp = async (e: FormEvent) => {
     e.preventDefault();
@@ -64,22 +71,27 @@ function SignUp({}: SignUpProps) {
   };
 
   return (
-    <Flex position="relative" minH="100vh" align="center" justify="center">
-      <GradientBorder>
-        <Box w={{ base: "100%", md: "420px" }} p="40px" mx="auto" borderRadius="15px" bg="gray.800">
-          <Heading color={titleColor} fontSize="32px" mb="10px">Sign Up</Heading>
-          <Text mb="20px" color={textColor} fontSize="sm">Create an account</Text>
-          <FormControl>
-            <FormLabel color={textColor}>Email</FormLabel>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" mb="15px" />
-            <FormLabel color={textColor}>Password</FormLabel>
-            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password" mb="15px" />
-            <Button isLoading={loading} colorScheme="teal" onClick={handleSignUp} w="100%">Sign Up</Button>
-          </FormControl>
-          <AuthFooter />
-        </Box>
-      </GradientBorder>
-    </Flex>
+    <>
+      <Head>
+        <title>Sign Up</title>
+      </Head>
+      <Flex direction="column" align="center" justify="center" minH="100vh" bgGradient={bgGradient}>
+        <GradientBorder>
+          <Box w={{ base: "100%", md: "420px" }} p="40px" mx="auto" borderRadius="15px" bg="gray.800">
+            <Heading color={titleColor} fontSize="32px" mb="10px">Sign Up</Heading>
+            <Text mb="20px" color={textColor} fontSize="sm">Create an account</Text>
+            <FormControl>
+              <FormLabel color={textColor}>Email</FormLabel>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" mb="15px" />
+              <FormLabel color={textColor}>Password</FormLabel>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password" mb="15px" />
+              <Button isLoading={loading} colorScheme="teal" onClick={handleSignUp} w="100%">Sign Up</Button>
+            </FormControl>
+            <AuthFooter />
+          </Box>
+        </GradientBorder>
+      </Flex>
+    </>
   );
 }
 
