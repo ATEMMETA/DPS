@@ -1,8 +1,7 @@
 'use client';
 /*eslint-disable*/
 
-import CodeBlock from '@/components/CodeBlock'; // Default import
-
+// import CodeBlock from '@/components/CodeBlock'; // Comment out
 import { Box, Button, Flex, Icon, Img, Text, useColorModeValue } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
@@ -25,35 +24,7 @@ export default function GrokHelper() {
   const textColor = useColorModeValue('navy.700', 'white');
 
   const handleGenerate = async () => {
-    const apiKey = 'YOUR_GROK_API_KEY'; // Replace with your key
-    if (!inputCode) {
-      alert('Please enter your code.');
-      return;
-    }
-    setOutputCode(' ');
-    setLoading(true);
-
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'grok-beta',
-        messages: [{ role: 'user', content: `Analyze this code for dependencies: ${inputCode}` }],
-      }),
-    });
-
-    if (!response.ok) {
-      setLoading(false);
-      alert('Something went wrong with Grok.');
-      return;
-    }
-
-    const data = await response.json();
-    setOutputCode(data.choices[0].message.content);
-    setLoading(false);
+    // ...unchanged...
   };
 
   return (
@@ -95,12 +66,12 @@ export default function GrokHelper() {
             ></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </Box>
-          <CodeBlock
+          {/* <CodeBlock
             code={inputCode || '// Drag or type code here'}
             height="400"
             editable={true}
             onChange={(value) => setInputCode(value)}
-          />
+          /> */} {/* Comment out */}
           {loading && <Text mt={2} color={gray}>Loading...</Text>}
           {outputCode && (
             <Box mt={4} p="22px" border="1px solid" borderColor={borderColor} borderRadius="14px">
