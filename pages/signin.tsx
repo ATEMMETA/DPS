@@ -23,7 +23,7 @@ export default function SignIn() {
     if (email === dummyEmail && password === dummyPassword) {
       // Fake auth success
       localStorage.setItem('isAuthenticated', 'true'); // Simple flag
-      router.push('/chatui/grok'); // Redirect to a main page
+      router.push('/app_disabled/layout.tsx'); // Redirect to a main page
     } else {
       setError('Invalid email or password—try test@example.com / password123');
     }
