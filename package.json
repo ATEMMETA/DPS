@@ -42,7 +42,9 @@
     "web-vitals": "^3.5.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "camelcase-css": "^2.0.1"
+    "camelcase-css": "^2.0.1",
+    "ai": "^3.0.0",          // Vercel AI SDK core
+    "@ai-sdk/openai": "^0.0.13" // OpenAI provider
   },
   "devDependencies": {
     "@babel/cli": "^7.25.0",
