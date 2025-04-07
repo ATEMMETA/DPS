@@ -5,6 +5,9 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import Head from 'next/head';
 
+// Explicitly define the model to ensure compatibility
+const chatModel = openai('gpt-4o-mini');
+
 export default function ChatUI() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
   const [input, setInput] = useState('');
@@ -29,7 +32,7 @@ export default function ChatUI() {
 
     try {
       const { text } = await generateText({
-        model: openai('gpt-4o-mini'),
+        model: chatModel, // Use the pre-defined model
         prompt: input,
         maxTokens: 500,
       });
