@@ -30,16 +30,19 @@ export default function ChatUI() {
     setLoading(true);
 
     try {
+      console.log('Sending request to OpenAI with prompt:', input); // Debug log
       const { text } = await generateText({
         model: chatModel as any,
         prompt: input,
         maxTokens: 500,
       });
+      console.log('Received response:', text); // Debug log
       setMessages((prev) => [...prev, { role: 'ai' as const, content: text }]);
     } catch (error) {
+      console.error('Error calling OpenAI:', error); // Debug log
       setMessages((prev) => [
         ...prev,
-        { role: 'ai' as const, content: 'Oops, something went wrong. Try again?' },
+        { role: 'ai' as const, content: `Error: ${error.message || 'Unknown error'}` },
       ]);
     } finally {
       setLoading(false);
