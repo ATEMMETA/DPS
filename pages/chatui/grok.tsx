@@ -66,6 +66,49 @@ export default function ChatUI() {
         <VStack flex={1} spacing={4} w="full" maxW="800px" mx="auto" overflowY="auto" py={4}>
           {messages.length === 0 ? (
             <Text fontSize="lg" opacity={0.7}>Start the conversation—ask me anything!</Text>
-          )...
-
-Something went wrong. Please try again.
+          ) : (
+            messages.map((msg, index) => (
+              <Box
+                key={index}
+                alignSelf={msg.role === 'user' ? 'flex-end' : 'flex-start'}
+                bg={msg.role === 'user' ? 'teal.500' : 'gray.700'}
+                p={3}
+                borderRadius="md"
+                maxW="70%"
+                wordBreak="break-word"
+              >
+                <Text>{msg.content}</Text>
+              </Box>
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </VStack>
+        <Flex w="full" maxW="800px" mx="auto" mt={4} align="center">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            bg={inputBg}
+            border="none"
+            p={4}
+            flex={1}
+            fontSize="lg"
+            _focus={{ boxShadow: 'outline' }}
+            disabled={loading}
+          />
+          <Button
+            onClick={handleSend}
+            colorScheme="teal"
+            ml={2}
+            px={6}
+            isLoading={loading}
+            loadingText="Sending"
+          >
+            Send
+          </Button>
+        </Flex>
+      </Flex>
+    </>
+  );
+}
