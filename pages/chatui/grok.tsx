@@ -2,14 +2,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Box, Flex, Input, Button, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { generateText } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai'; // Import createOpenAI instead
+import { createOpenAI } from '@ai-sdk/openai';
 import Head from 'next/head';
 
 // Create OpenAI provider with apiKey
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
-const openai = createOpenAI({ apiKey }); // Set apiKey at provider level
-const chatModel = openai('gpt-4o-mini'); // No settings needed here
+const openai = createOpenAI({ apiKey });
+const chatModel = openai('gpt-4o-mini');
 
 export default function ChatUI() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
@@ -45,7 +45,7 @@ export default function ChatUI() {
     try {
       console.log('Sending request to OpenAI with prompt:', input);
       const { text } = await generateText({
-        model: chatModel as any, // Keeping this until we resolve all type issues
+        model: chatModel as any,
         prompt: input,
         maxTokens: 500,
       });
@@ -68,6 +68,17 @@ export default function ChatUI() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleDownload = () => {
+    const data = JSON.stringify(messages, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'chat-log.json';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -96,7 +107,7 @@ export default function ChatUI() {
           )}
           <div ref={messagesEndRef} />
         </VStack>
-        <Flex w="full" maxW="800px" mx="auto" mt={4} align="center">
+        <Flex w="full" maxW="800px" mx="auto" mt={4} align="center" gap={2}>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -113,15 +124,17 @@ export default function ChatUI() {
           <Button
             onClick={handleSend}
             colorScheme="teal"
-            ml={2}
             px={6}
             isLoading={loading}
             loadingText="Sending"
           >
             Send
           </Button>
+          <Button onClick={handleDownload} colorScheme="blue" px={6}>
+            Download Chat
+          </Button>
         </Flex>
       </Flex>
     </>
   );
-}
+        }
