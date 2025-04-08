@@ -4,7 +4,6 @@ import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import Head from 'next/head';
 import Link from '@/components/link/Link';
-import MessageBoxChat from '@/components/MessageBox';
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
   Accordion,
@@ -16,13 +15,11 @@ import {
   Button,
   Flex,
   Icon,
-  Img,
   Input,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
-import Bg from '../public/img/chat/bg-image.png';
 
 // Create OpenAI provider with apiKey
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -123,6 +120,17 @@ export default function Chat(props: { apiKeyApp: string }) {
     }
   };
 
+  const handleDownload = () => {
+    const data = JSON.stringify(messages, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'chat-log.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <>
       <Head>
@@ -134,14 +142,6 @@ export default function Chat(props: { apiKeyApp: string }) {
         direction="column"
         position="relative"
       >
-        <Img
-          src={Bg.src}
-          position={'absolute'}
-          w="350px"
-          left="50%"
-          top="50%"
-          transform={'translate(-50%, -50%)'}
-        />
         <Flex
           direction="column"
           mx="auto"
@@ -312,8 +312,8 @@ export default function Chat(props: { apiKeyApp: string }) {
             <div ref={messagesEndRef} />
           </Flex>
 
-          {/* Chat Input */}
-          <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifySelf={'flex-end'}>
+          {/* Chat Input with Download */}
+          <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifySelf={'flex-end'} align="center" gap={2}>
             <Input
               minH="54px"
               h="100%"
@@ -339,7 +339,6 @@ export default function Chat(props: { apiKeyApp: string }) {
               px="16px"
               fontSize="sm"
               borderRadius="45px"
-              ms="auto"
               w={{ base: '160px', md: '210px' }}
               h="54px"
               _hover={{
@@ -353,6 +352,18 @@ export default function Chat(props: { apiKeyApp: string }) {
               isLoading={loading}
             >
               Submit
+            </Button>
+            <Button
+              onClick={handleDownload}
+              colorScheme="blue"
+              py="20px"
+              px="16px"
+              fontSize="sm"
+              borderRadius="45px"
+              w={{ base: '160px', md: '210px' }}
+              h="54px"
+            >
+              Download Chat
             </Button>
           </Flex>
 
