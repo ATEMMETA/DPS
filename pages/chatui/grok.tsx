@@ -2,13 +2,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Box, Flex, Input, Button, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai'; // Import createOpenAI instead
 import Head from 'next/head';
 
-// Ensure apiKey is a string, throw if missing
+// Create OpenAI provider with apiKey
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
-const chatModel = openai('gpt-4o-mini', { apiKey });
+const openai = createOpenAI({ apiKey }); // Set apiKey at provider level
+const chatModel = openai('gpt-4o-mini'); // No settings needed here
 
 export default function ChatUI() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
