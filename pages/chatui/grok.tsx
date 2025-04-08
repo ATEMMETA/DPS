@@ -1,9 +1,28 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { Box, Flex, Input, Button, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import Head from 'next/head';
+import Link from '@/components/link/Link';
+import MessageBoxChat from '@/components/MessageBox';
+import { ChatBody, OpenAIModel } from '@/types/types';
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Img,
+  Input,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
+import Bg from '../public/img/chat/bg-image.png';
 
 // Create OpenAI provider with apiKey
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -11,48 +30,78 @@ if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
 const openai = createOpenAI({ apiKey });
 const chatModel = openai('gpt-4o-mini');
 
-export default function ChatUI() {
+export default function Chat(props: { apiKeyApp: string }) {
+  // State Management
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [inputCode, setInputCode] = useState<string>('');
+  const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
+  const [model, setModel] = useState<OpenAIModel>('gpt-4o');
+  const [loading, setLoading] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Show API key status in UI
+  // Color Mode Values
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const inputColor = useColorModeValue('navy.700', 'white');
+  const iconColor = useColorModeValue('brand.500', 'white');
+  const bgIcon = useColorModeValue(
+    'linear-gradient(180deg, #FBFBFF 0%, #CACAFF 100%)',
+    'whiteAlpha.200',
+  );
+  const brandColor = useColorModeValue('brand.500', 'white');
+  const buttonBg = useColorModeValue('white', 'whiteAlpha.100');
+  const gray = useColorModeValue('gray.500', 'white');
+  const buttonShadow = useColorModeValue(
+    '14px 27px 45px rgba(112, 144, 176, 0.2)',
+    'none',
+  );
+  const textColor = useColorModeValue('navy.700', 'white');
+  const placeholderColor = useColorModeValue(
+    { color: 'gray.500' },
+    { color: 'whiteAlpha.600' },
+  );
+
+  // API Key Status
   useEffect(() => {
     const hasApiKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
     setMessages((prev) => [
       ...prev,
-      { role: 'ai' as const, content: `API Key Present: ${hasApiKey ? 'Yes' : 'No'}` },
+      { role: 'ai', content: `API Key Present: ${hasApiKey ? 'Yes' : 'No'}` },
     ]);
   }, []);
 
-  const bgColor = useColorModeValue('gray.800', 'gray.900');
-  const textColor = useColorModeValue('white', 'gray.200');
-  const inputBg = useColorModeValue('gray.700', 'gray.800');
-
+  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleTranslate = async () => {
+    if (!inputCode.trim()) {
+      alert('Please enter your message.');
+      return;
+    }
 
-    const userMessage = { role: 'user' as const, content: input };
+    const maxCodeLength = model === 'gpt-4o' ? 700 : 700;
+    if (inputCode.length > maxCodeLength) {
+      alert(
+        `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
+      );
+      return;
+    }
+
+    const userMessage = { role: 'user' as const, content: inputCode };
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    setInputOnSubmit(inputCode);
+    setInputCode('');
     setLoading(true);
 
     try {
-      console.log('Sending request to OpenAI with prompt:', input);
       const { text } = await generateText({
         model: chatModel as any,
-        prompt: input,
+        prompt: inputCode,
         maxTokens: 500,
       });
-      console.log('Received response:', text);
       setMessages((prev) => [...prev, { role: 'ai' as const, content: text }]);
     } catch (error: unknown) {
-      console.error('Error calling OpenAI:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       setMessages((prev) => [
         ...prev,
@@ -63,22 +112,15 @@ export default function ChatUI() {
     }
   };
 
+  const handleChange = (event: any) => {
+    setInputCode(event.target.value);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleTranslate();
     }
-  };
-
-  const handleDownload = () => {
-    const data = JSON.stringify(messages, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'chat-log.json';
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -86,55 +128,251 @@ export default function ChatUI() {
       <Head>
         <title>Chat with Grok</title>
       </Head>
-      <Flex direction="column" minH="100vh" bg={bgColor} color={textColor} p={4}>
-        <VStack flex={1} spacing={4} w="full" maxW="800px" mx="auto" overflowY="auto" py={4}>
-          {messages.length === 0 ? (
-            <Text fontSize="lg" opacity={0.7}>Start the conversation—ask me anything!</Text>
-          ) : (
-            messages.map((msg, index) => (
-              <Box
-                key={index}
-                alignSelf={msg.role === 'user' ? 'flex-end' : 'flex-start'}
-                bg={msg.role === 'user' ? 'teal.500' : 'gray.700'}
-                p={3}
-                borderRadius="md"
-                maxW="70%"
-                wordBreak="break-word"
+      <Flex
+        w="100%"
+        pt={{ base: '70px', md: '0px' }}
+        direction="column"
+        position="relative"
+      >
+        <Img
+          src={Bg.src}
+          position={'absolute'}
+          w="350px"
+          left="50%"
+          top="50%"
+          transform={'translate(-50%, -50%)'}
+        />
+        <Flex
+          direction="column"
+          mx="auto"
+          w={{ base: '100%', md: '100%', xl: '100%' }}
+          minH={{ base: '75vh', '2xl': '85vh' }}
+          maxW="1000px"
+        >
+          {/* Model Selection */}
+          <Flex direction={'column'} w="100%" mb={messages.length ? '20px' : 'auto'}>
+            <Flex
+              mx="auto"
+              zIndex="2"
+              w="max-content"
+              mb="20px"
+              borderRadius="60px"
+            >
+              <Flex
+                cursor={'pointer'}
+                transition="0.3s"
+                justify={'center'}
+                align="center"
+                bg={model === 'gpt-4o' ? buttonBg : 'transparent'}
+                w="174px"
+                h="70px"
+                boxShadow={model === 'gpt-4o' ? buttonShadow : 'none'}
+                borderRadius="14px"
+                color={textColor}
+                fontSize="18px"
+                fontWeight={'700'}
+                onClick={() => setModel('gpt-4o')}
               >
-                <Text>{msg.content}</Text>
-              </Box>
-            ))
-          )}
-          <div ref={messagesEndRef} />
-        </VStack>
-        <Flex w="full" maxW="800px" mx="auto" mt={4} align="center" gap={2}>
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            bg={inputBg}
-            border="none"
-            p={4}
-            flex={1}
-            fontSize="lg"
-            _focus={{ boxShadow: 'outline' }}
-            disabled={loading}
-          />
-          <Button
-            onClick={handleSend}
-            colorScheme="teal"
-            px={6}
-            isLoading={loading}
-            loadingText="Sending"
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg={bgIcon}
+                  me="10px"
+                  h="39px"
+                  w="39px"
+                >
+                  <Icon
+                    as={MdAutoAwesome}
+                    width="20px"
+                    height="20px"
+                    color={iconColor}
+                  />
+                </Flex>
+                GPT-4o
+              </Flex>
+              <Flex
+                cursor={'pointer'}
+                transition="0.3s"
+                justify={'center'}
+                align="center"
+                bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
+                w="164px"
+                h="70px"
+                boxShadow={model === 'gpt-3.5-turbo' ? buttonShadow : 'none'}
+                borderRadius="14px"
+                color={textColor}
+                fontSize="18px"
+                fontWeight={'700'}
+                onClick={() => setModel('gpt-3.5-turbo')}
+              >
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg={bgIcon}
+                  me="10px"
+                  h="39px"
+                  w="39px"
+                >
+                  <Icon
+                    as={MdBolt}
+                    width="20px"
+                    height="20px"
+                    color={iconColor}
+                  />
+                </Flex>
+                GPT-3.5
+              </Flex>
+            </Flex>
+
+            <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
+              <AccordionItem border="none">
+                <AccordionButton
+                  borderBottom="0px solid"
+                  maxW="max-content"
+                  mx="auto"
+                  _hover={{ border: '0px solid', bg: 'none' }}
+                  _focus={{ border: '0px solid', bg: 'none' }}
+                >
+                  <Box flex="1" textAlign="left">
+                    <Text color={gray} fontWeight="500" fontSize="sm">
+                      No plugins added
+                    </Text>
+                  </Box>
+                  <AccordionIcon color={gray} />
+                </AccordionButton>
+                <AccordionPanel mx="auto" w="max-content" p="0px 0px 10px 0px">
+                  <Text color={gray} fontWeight="500" fontSize="sm" textAlign={'center'}>
+                    This is a cool text example.
+                  </Text>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Flex>
+
+          {/* Messages Display */}
+          <Flex
+            direction="column"
+            w="100%"
+            mx="auto"
+            display={messages.length ? 'flex' : 'none'}
+            mb={'auto'}
           >
-            Send
-          </Button>
-          <Button onClick={handleDownload} colorScheme="blue" px={6}>
-            Download Chat
-          </Button>
+            {messages.map((msg, index) => (
+              <Flex key={index} w="100%" align={'center'} mb="10px">
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg={msg.role === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
+                  border={msg.role === 'user' ? '1px solid' : 'none'}
+                  borderColor={borderColor}
+                  me="20px"
+                  h="40px"
+                  minH="40px"
+                  minW="40px"
+                >
+                  <Icon
+                    as={msg.role === 'user' ? MdPerson : MdAutoAwesome}
+                    width="20px"
+                    height="20px"
+                    color={msg.role === 'user' ? brandColor : 'white'}
+                  />
+                </Flex>
+                <Flex
+                  p="22px"
+                  border="1px solid"
+                  borderColor={borderColor}
+                  borderRadius="14px"
+                  w="100%"
+                  zIndex={'2'}
+                >
+                  <Text
+                    color={textColor}
+                    fontWeight="600"
+                    fontSize={{ base: 'sm', md: 'md' }}
+                    lineHeight={{ base: '24px', md: '26px' }}
+                  >
+                    {msg.content}
+                  </Text>
+                  {msg.role === 'user' && (
+                    <Icon
+                      cursor="pointer"
+                      as={MdEdit}
+                      ms="auto"
+                      width="20px"
+                      height="20px"
+                      color={gray}
+                    />
+                  )}
+                </Flex>
+              </Flex>
+            ))}
+            <div ref={messagesEndRef} />
+          </Flex>
+
+          {/* Chat Input */}
+          <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifySelf={'flex-end'}>
+            <Input
+              minH="54px"
+              h="100%"
+              border="1px solid"
+              borderColor={borderColor}
+              borderRadius="45px"
+              p="15px 20px"
+              me="10px"
+              fontSize="sm"
+              fontWeight="500"
+              _focus={{ borderColor: 'none' }}
+              color={inputColor}
+              _placeholder={placeholderColor}
+              placeholder="Type your message here..."
+              value={inputCode}
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
+            />
+            <Button
+              variant="primary"
+              py="20px"
+              px="16px"
+              fontSize="sm"
+              borderRadius="45px"
+              ms="auto"
+              w={{ base: '160px', md: '210px' }}
+              h="54px"
+              _hover={{
+                boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
+                bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+                _disabled: {
+                  bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
+                },
+              }}
+              onClick={handleTranslate}
+              isLoading={loading}
+            >
+              Submit
+            </Button>
+          </Flex>
+
+          <Flex
+            justify="center"
+            mt="20px"
+            direction={{ base: 'column', md: 'row' }}
+            alignItems="center"
+          >
+            <Text fontSize="xs" textAlign="center" color={gray}>
+              Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts.
+            </Text>
+            <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
+              <Text fontSize="xs" color={textColor} fontWeight="500" textDecoration="underline">
+                ChatGPT May 12 Version
+              </Text>
+            </Link>
+          </Flex>
         </Flex>
       </Flex>
     </>
   );
-        }
+}
