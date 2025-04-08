@@ -13,8 +13,14 @@ export default function ChatUI() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Log the API key presence (won’t show the value, just existence)
-  console.log('OPENAI_API_KEY present:', !!process.env.OPENAI_API_KEY);
+  // Add env var status to messages on mount
+  useEffect(() => {
+    const hasApiKey = !!process.env.OPENAI_API_KEY;
+    setMessages((prev) => [
+      ...prev,
+      { role: 'ai' as const, content: `API Key Present: ${hasApiKey ? 'Yes' : 'No'}` },
+    ]);
+  }, []);
 
   const bgColor = useColorModeValue('gray.800', 'gray.900');
   const textColor = useColorModeValue('white', 'gray.200');
