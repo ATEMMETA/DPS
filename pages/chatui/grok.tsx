@@ -5,7 +5,7 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import Head from 'next/head';
 
-// Explicitly define the model to ensure compatibility
+// Define the model explicitly
 const chatModel = openai('gpt-4o-mini');
 
 export default function ChatUI() {
@@ -32,9 +32,11 @@ export default function ChatUI() {
 
     try {
       const { text } = await generateText({
-        model: chatModel, // Use the pre-defined model
+        model: chatModel,
         prompt: input,
         maxTokens: 500,
+        // Explicitly set mode to avoid tool-related type issues
+        mode: { type: 'regular' },
       });
       setMessages((prev) => [...prev, { role: 'ai' as const, content: text }]);
     } catch (error) {
