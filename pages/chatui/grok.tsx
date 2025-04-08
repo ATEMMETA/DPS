@@ -34,7 +34,7 @@ export default function Chat() {
   const [model, setModel] = useState<OpenAIModel>('gpt-4o');
   const [loading, setLoading] = useState<boolean>(false);
   const [apiKeyApp, setApiKeyApp] = useState<string>('');
-  const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false); // New state for input size
+  const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
@@ -268,8 +268,8 @@ export default function Chat() {
               direction="column"
               w="100%"
               mx="auto"
-              flex={3} // Give more room to messages
-              overflowY="auto" // Scrollable messages
+              flex={1}
+              overflowY="auto"
               display={messages.length ? 'flex' : 'none'}
               mb="20px"
             >
@@ -300,8 +300,10 @@ export default function Chat() {
                     borderColor={borderColor}
                     borderRadius="14px"
                     w="100%"
+                    minW={{ base: '300px', md: '400px' }} // ~30-40 characters wide
+                    minH="60px" // ~2 lines
                     zIndex={'2'}
-                    whiteSpace="pre-wrap" // Preserve code formatting
+                    whiteSpace="pre-wrap"
                     wordBreak="break-word"
                   >
                     <Text
@@ -337,93 +339,9 @@ export default function Chat() {
               gap={2}
               position="sticky"
               bottom={0}
-              bg={useColorModeValue('white', 'navy.800')} // Match navbar bg
+              bg={useColorModeValue('white', 'navy.800')}
               py={2}
             >
               <Box position="relative" flex={1}>
                 <Input
-                  minH={isInputExpanded ? '100px' : '54px'} // Default 3-4 lines, shrinks to 1-2
-                  maxH={isInputExpanded ? '200px' : '54px'} // Expandable up to ~8 lines
-                  h="100%"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  borderRadius="45px"
-                  p="15px 40px 15px 20px" // Extra padding-right for icon
-                  fontSize="sm"
-                  fontWeight="500"
-                  _focus={{ borderColor: 'none' }}
-                  color={inputColor}
-                  _placeholder={placeholderColor}
-                  placeholder="Type your message here..."
-                  value={inputCode}
-                  onChange={handleChange}
-                  onKeyPress={handleKeyPress}
-                  disabled={loading}
-                  resize="none" // Prevent manual resize
-                  overflowY="auto" // Scrollable when content overflows
-                />
-                <Icon
-                  as={isInputExpanded ? MdExpandLess : MdExpandMore}
-                  position="absolute"
-                  right="10px"
-                  top="50%"
-                  transform="translateY(-50%)"
-                  color={gray}
-                  w="20px"
-                  h="20px"
-                  cursor="pointer"
-                  onClick={toggleInputSize}
-                />
-              </Box>
-              <Button
-                variant="primary"
-                py="20px"
-                px="16px"
-                fontSize="sm"
-                borderRadius="45px"
-                w={{ base: '160px', md: '210px' }}
-                h="54px"
-                _hover={{
-                  boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
-                  bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
-                }}
-                onClick={handleTranslate}
-                isLoading={loading}
-              >
-                Submit
-              </Button>
-              <Button
-                onClick={handleDownload}
-                colorScheme="blue"
-                py="20px"
-                px="16px"
-                fontSize="sm"
-                borderRadius="45px"
-                w={{ base: '160px', md: '210px' }}
-                h="54px"
-              >
-                Download Chat
-              </Button>
-            </Flex>
-
-            <Flex
-              justify="center"
-              mt="20px"
-              direction={{ base: 'column', md: 'row' }}
-              alignItems="center"
-            >
-              <Text fontSize="xs" textAlign="center" color={gray}>
-                Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts.
-              </Text>
-              <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
-                <Text fontSize="xs" color={textColor} fontWeight="500" textDecoration="underline">
-                  ChatGPT May 12 Version
-                </Text>
-              </Link>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Box>
-    </>
-  );
-}
+                  min
