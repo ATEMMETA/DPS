@@ -5,7 +5,6 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import Head from 'next/head';
 
-// Define the model
 const chatModel = openai('gpt-4o-mini');
 
 export default function ChatUI() {
@@ -32,7 +31,6 @@ export default function ChatUI() {
 
     try {
       const { text } = await generateText({
-        // Cast to any to bypass TypeScript mismatch
         model: chatModel as any,
         prompt: input,
         maxTokens: 500,
