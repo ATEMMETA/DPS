@@ -5,7 +5,8 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import Head from 'next/head';
 
-const chatModel = openai('gpt-4o-mini');
+// Use NEXT_PUBLIC_OPENAI_API_KEY for client-side access
+const chatModel = openai('gpt-4o-mini', { apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY });
 
 export default function ChatUI() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
@@ -13,9 +14,9 @@ export default function ChatUI() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Add env var status to messages on mount
+  // Show API key status in UI
   useEffect(() => {
-    const hasApiKey = !!process.env.OPENAI_API_KEY;
+    const hasApiKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
     setMessages((prev) => [
       ...prev,
       { role: 'ai' as const, content: `API Key Present: ${hasApiKey ? 'Yes' : 'No'}` },
