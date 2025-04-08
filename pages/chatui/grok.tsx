@@ -19,27 +19,24 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
-import AdminNavbar from '@/components/navbar/NavbarAdmin'; // Import your navbar
-import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin'; // Import navbar links
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson, MdExpandMore, MdExpandLess } from 'react-icons/md';
+import AdminNavbar from '@/components/navbar/NavbarAdmin';
 
-// Create OpenAI provider with apiKey
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
 const openai = createOpenAI({ apiKey });
 const chatModel = openai('gpt-4o-mini');
 
 export default function Chat() {
-  // State Management
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
   const [inputCode, setInputCode] = useState<string>('');
   const [inputOnSubmit, setInputOnSubmit] = useState<string>('');
   const [model, setModel] = useState<OpenAIModel>('gpt-4o');
   const [loading, setLoading] = useState<boolean>(false);
-  const [apiKeyApp, setApiKeyApp] = useState<string>(''); // For APIModal
+  const [apiKeyApp, setApiKeyApp] = useState<string>('');
+  const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false); // New state for input size
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Color Mode Values
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
   const inputColor = useColorModeValue('navy.700', 'white');
   const iconColor = useColorModeValue('brand.500', 'white');
@@ -60,7 +57,6 @@ export default function Chat() {
     { color: 'whiteAlpha.600' },
   );
 
-  // API Key Status
   useEffect(() => {
     const hasApiKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
     setMessages((prev) => [
@@ -69,7 +65,6 @@ export default function Chat() {
     ]);
   }, []);
 
-  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -134,26 +129,28 @@ export default function Chat() {
     URL.revokeObjectURL(url);
   };
 
+  const toggleInputSize = () => {
+    setIsInputExpanded(!isInputExpanded);
+  };
+
   return (
     <>
       <Head>
         <title>Chat with Grok</title>
       </Head>
       <Box minH="100vh" display="flex" flexDirection="column">
-        {/* Navbar */}
         <AdminNavbar
           secondary={false}
           brandText="Chat with Grok"
           logoText="DPS"
-          onOpen={() => {}} // Placeholder; add sidebar toggle if needed
+          onOpen={() => {}}
           setApiKey={setApiKeyApp}
         />
 
-        {/* Main Content */}
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '90px', md: '90px' }} // Adjusted padding to account for navbar height
+          pt={{ base: '90px', md: '90px' }}
           direction="column"
           position="relative"
         >
@@ -271,8 +268,10 @@ export default function Chat() {
               direction="column"
               w="100%"
               mx="auto"
+              flex={1} // Give more room to messages
+              overflowY="auto" // Scrollable messages
               display={messages.length ? 'flex' : 'none'}
-              mb={'auto'}
+              mb="20px"
             >
               {messages.map((msg, index) => (
                 <Flex key={index} w="100%" align={'center'} mb="10px">
@@ -302,6 +301,8 @@ export default function Chat() {
                     borderRadius="14px"
                     w="100%"
                     zIndex={'2'}
+                    whiteSpace="pre-wrap" // Preserve code formatting
+                    wordBreak="break-word"
                   >
                     <Text
                       color={textColor}
@@ -327,27 +328,53 @@ export default function Chat() {
               <div ref={messagesEndRef} />
             </Flex>
 
-            {/* Chat Input with Download */}
-            <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifySelf={'flex-end'} align="center" gap={2}>
-              <Input
-                minH="54px"
-                h="100%"
-                border="1px solid"
-                borderColor={borderColor}
-                borderRadius="45px"
-                p="15px 20px"
-                me="10px"
-                fontSize="sm"
-                fontWeight="500"
-                _focus={{ borderColor: 'none' }}
-                color={inputColor}
-                _placeholder={placeholderColor}
-                placeholder="Type your message here..."
-                value={inputCode}
-                onChange={handleChange}
-                onKeyPress={handleKeyPress}
-                disabled={loading}
-              />
+            {/* Chat Input with Resize Toggle */}
+            <Flex
+              ms={{ base: '0px', xl: '60px' }}
+              mt="20px"
+              justifySelf={'flex-end'}
+              align="center"
+              gap={2}
+              position="sticky"
+              bottom={0}
+              bg={useColorModeValue('white', 'navy.800')} // Match navbar bg
+              py={2}
+            >
+              <Box position="relative" flex={1}>
+                <Input
+                  minH={isInputExpanded ? '100px' : '54px'} // Default 3-4 lines, shrinks to 1-2
+                  maxH={isInputExpanded ? '200px' : '54px'} // Expandable up to ~8 lines
+                  h="100%"
+                  border="1px solid"
+                  borderColor={borderColor}
+                  borderRadius="45px"
+                  p="15px 40px 15px 20px" // Extra padding-right for icon
+                  fontSize="sm"
+                  fontWeight="500"
+                  _focus={{ borderColor: 'none' }}
+                  color={inputColor}
+                  _placeholder={placeholderColor}
+                  placeholder="Type your message here..."
+                  value={inputCode}
+                  onChange={handleChange}
+                  onKeyPress={handleKeyPress}
+                  disabled={loading}
+                  resize="none" // Prevent manual resize
+                  overflowY="auto" // Scrollable when content overflows
+                />
+                <Icon
+                  as={isInputExpanded ? MdExpandLess : MdExpandMore}
+                  position="absolute"
+                  right="10px"
+                  top="50%"
+                  transform="translateY(-50%)"
+                  color={gray}
+                  w="20px"
+                  h="20px"
+                  cursor="pointer"
+                  onClick={toggleInputSize}
+                />
+              </Box>
               <Button
                 variant="primary"
                 py="20px"
@@ -359,9 +386,6 @@ export default function Chat() {
                 _hover={{
                   boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
                   bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
-                  _disabled: {
-                    bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
-                  },
                 }}
                 onClick={handleTranslate}
                 isLoading={loading}
