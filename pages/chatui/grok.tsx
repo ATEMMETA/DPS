@@ -268,7 +268,7 @@ export default function Chat() {
               direction="column"
               w="100%"
               mx="auto"
-              flex={1} // Give more room to messages
+              flex={3} // Give more room to messages
               overflowY="auto" // Scrollable messages
               display={messages.length ? 'flex' : 'none'}
               mb="20px"
