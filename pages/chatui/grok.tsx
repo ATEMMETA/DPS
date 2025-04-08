@@ -13,6 +13,9 @@ export default function ChatUI() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Log the API key presence (won’t show the value, just existence)
+  console.log('OPENAI_API_KEY present:', !!process.env.OPENAI_API_KEY);
+
   const bgColor = useColorModeValue('gray.800', 'gray.900');
   const textColor = useColorModeValue('white', 'gray.200');
   const inputBg = useColorModeValue('gray.700', 'gray.800');
