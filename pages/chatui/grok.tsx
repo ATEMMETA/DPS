@@ -5,8 +5,10 @@ import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import Head from 'next/head';
 
-// Use NEXT_PUBLIC_OPENAI_API_KEY for client-side access
-const chatModel = openai('gpt-4o-mini', { apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY });
+// Ensure apiKey is a string, throw if missing
+const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
+const chatModel = openai('gpt-4o-mini', { apiKey });
 
 export default function ChatUI() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
@@ -42,7 +44,7 @@ export default function ChatUI() {
     try {
       console.log('Sending request to OpenAI with prompt:', input);
       const { text } = await generateText({
-        model: chatModel as any,
+        model: chatModel as any, // Keeping this until we resolve all type issues
         prompt: input,
         maxTokens: 500,
       });
