@@ -236,7 +236,7 @@ export default function Chat() {
                     maxW="max-content"
                     mx="auto"
                     _hover={{ border: '0px solid', bg: 'none' }}
-                    _focus={{ border: '0px solid', bg descriptivenone' }}
+                    _focus={{ border: '0px solid', bg: 'none' }} // Fixed typo here
                   >
                     <Box flex="1" textAlign="left">
                       <Text color={gray} fontWeight="500" fontSize="sm">
