@@ -125,7 +125,6 @@ export default function Chat(props: { apiKeyApp: string }) {
         pt={{ base: '70px', md: '0px' }}
         direction="column"
         position="relative"
-        minH="200vh"
       >
         <Flex
           direction="column"
@@ -229,7 +228,8 @@ export default function Chat(props: { apiKeyApp: string }) {
           {/* Dedicated Messages Area */}
           <Box
             w="100%"
-            minH={{ base: '100vh', '2xl': '120vh' }}
+            minH={{ base: '200vh', '2xl': '220vh' }} // Moved minH here
+            flex={1} // Take all available space
             overflowY="auto"
             display={messages.length ? 'block' : 'none'}
             mb="20px"
@@ -338,4 +338,4 @@ export default function Chat(props: { apiKeyApp: string }) {
       </Flex>
     </>
   );
-      }
+}
