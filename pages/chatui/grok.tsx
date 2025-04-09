@@ -125,13 +125,14 @@ export default function Chat(props: { apiKeyApp: string }) {
         pt={{ base: '70px', md: '0px' }}
         direction="column"
         position="relative"
+        minH="100vh" // Ensure the whole page takes at least full viewport
       >
         <Flex
           direction="column"
           mx="auto"
           w={{ base: '100%', md: '100%', xl: '100%' }}
-          minH={{ base: '150vh', '2xl': '170vh' }} // Doubled from 75vh/85vh
           maxW="1000px"
+          flex={1} // Allow this Flex to grow
         >
           {/* Model Selection */}
           <Flex direction="column" w="100%" mb={messages.length ? '20px' : 'auto'}>
@@ -225,15 +226,13 @@ export default function Chat(props: { apiKeyApp: string }) {
             </Accordion>
           </Flex>
 
-          {/* Messages Display */}
-          <Flex
-            direction="column"
+          {/* Dedicated Messages Area */}
+          <Box
             w="100%"
-            mx="auto"
-            flex={1} // Stretch to fill available space
-            overflowY="auto" // Scroll when it overflows
-            display={messages.length ? 'flex' : 'none'}
-            mb="auto"
+            minH={{ base: '100vh', '2xl': '120vh' }} // Explicit height for messages
+            overflowY="auto" // Independent scroll
+            display={messages.length ? 'block' : 'none'}
+            mb="20px"
           >
             {messages.map((msg, index) => (
               <Flex key={index} w="100%" align="center" mb="10px">
@@ -290,7 +289,7 @@ export default function Chat(props: { apiKeyApp: string }) {
               </Flex>
             ))}
             <div ref={messagesEndRef} />
-          </Flex>
+          </Box>
 
           {/* Chat Input */}
           <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifySelf="flex-end">
