@@ -125,7 +125,7 @@ export default function Chat(props: { apiKeyApp: string }) {
         pt={{ base: '70px', md: '0px' }}
         direction="column"
         position="relative"
-        minH="100vh"
+        minH="200vh"
       >
         <Flex
           direction="column"
