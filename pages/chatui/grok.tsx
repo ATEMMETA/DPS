@@ -153,17 +153,16 @@ export default function Chat() {
           pt={{ base: '90px', md: '90px' }}
           direction="column"
           position="relative"
-          minH={{ base: '150vh', '2xl': '170vh' }} // Double the height
         >
           <Flex
             direction="column"
             mx="auto"
             w={{ base: '100%', md: '100%', xl: '100%' }}
+            minH={{ base: '75vh', '2xl': '85vh' }}
             maxW="1000px"
-            h="100%" // Fill the parent
           >
-            {/* Model Selection - Up Top */}
-            <Flex direction="column" w="100%" mb={messages.length ? '20px' : 'auto'}>
+            {/* Model Selection */}
+            <Flex direction={'column'} w="100%" mb={messages.length ? '20px' : 'auto'}>
               <Flex
                 mx="auto"
                 zIndex="2"
@@ -172,9 +171,9 @@ export default function Chat() {
                 borderRadius="60px"
               >
                 <Flex
-                  cursor="pointer"
+                  cursor={'pointer'}
                   transition="0.3s"
-                  justify="center"
+                  justify={'center'}
                   align="center"
                   bg={model === 'gpt-4o' ? buttonBg : 'transparent'}
                   w="174px"
@@ -183,7 +182,7 @@ export default function Chat() {
                   borderRadius="14px"
                   color={textColor}
                   fontSize="18px"
-                  fontWeight="700"
+                  fontWeight={'700'}
                   onClick={() => setModel('gpt-4o')}
                 >
                   <Flex
@@ -195,14 +194,19 @@ export default function Chat() {
                     h="39px"
                     w="39px"
                   >
-                    <Icon as={MdAutoAwesome} width="20px" height="20px" color={iconColor} />
+                    <Icon
+                      as={MdAutoAwesome}
+                      width="20px"
+                      height="20px"
+                      color={iconColor}
+                    />
                   </Flex>
                   GPT-4o
                 </Flex>
                 <Flex
-                  cursor="pointer"
+                  cursor={'pointer'}
                   transition="0.3s"
-                  justify="center"
+                  justify={'center'}
                   align="center"
                   bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
                   w="164px"
@@ -211,7 +215,7 @@ export default function Chat() {
                   borderRadius="14px"
                   color={textColor}
                   fontSize="18px"
-                  fontWeight="700"
+                  fontWeight={'700'}
                   onClick={() => setModel('gpt-3.5-turbo')}
                 >
                   <Flex
@@ -223,7 +227,12 @@ export default function Chat() {
                     h="39px"
                     w="39px"
                   >
-                    <Icon as={MdBolt} width="20px" height="20px" color={iconColor} />
+                    <Icon
+                      as={MdBolt}
+                      width="20px"
+                      height="20px"
+                      color={iconColor}
+                    />
                   </Flex>
                   GPT-3.5
                 </Flex>
@@ -236,7 +245,7 @@ export default function Chat() {
                     maxW="max-content"
                     mx="auto"
                     _hover={{ border: '0px solid', bg: 'none' }}
-                    _focus={{ border: '0px solid', bg: 'none' }} // Fixed typo here
+                    _focus={{ border: '0px solid', bg: 'none' }}
                   >
                     <Box flex="1" textAlign="left">
                       <Text color={gray} fontWeight="500" fontSize="sm">
@@ -246,7 +255,7 @@ export default function Chat() {
                     <AccordionIcon color={gray} />
                   </AccordionButton>
                   <AccordionPanel mx="auto" w="max-content" p="0px 0px 10px 0px">
-                    <Text color={gray} fontWeight="500" fontSize="sm" textAlign="center">
+                    <Text color={gray} fontWeight="500" fontSize="sm" textAlign={'center'}>
                       This is a cool text example.
                     </Text>
                   </AccordionPanel>
@@ -254,7 +263,7 @@ export default function Chat() {
               </Accordion>
             </Flex>
 
-            {/* Messages Display - Tall and Scrollable */}
+            {/* Messages Display */}
             <Flex
               direction="column"
               w="100%"
@@ -263,18 +272,15 @@ export default function Chat() {
               overflowY="auto"
               display={messages.length ? 'flex' : 'none'}
               mb="20px"
+              minH={{ base: '150vh', '2xl': '170vh' }} // Doubled from 75vh/85vh
             >
               {messages.map((msg, index) => (
-                <Flex key={index} w="100%" align="center" mb="10px">
+                <Flex key={index} w="100%" align={'center'} mb="10px">
                   <Flex
                     borderRadius="full"
                     justify="center"
                     align="center"
-                    bg={
-                      msg.role === 'user'
-                        ? 'transparent'
-                        : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'
-                    }
+                    bg={msg.role === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
                     border={msg.role === 'user' ? '1px solid' : 'none'}
                     borderColor={borderColor}
                     me="20px"
@@ -297,7 +303,7 @@ export default function Chat() {
                     w="100%"
                     minW={{ base: '300px', md: '400px' }}
                     minH="60px"
-                    zIndex="2"
+                    zIndex={'2'}
                     whiteSpace="pre-wrap"
                     wordBreak="break-word"
                   >
@@ -325,7 +331,7 @@ export default function Chat() {
               <div ref={messagesEndRef} />
             </Flex>
 
-            {/* Chat Input with Buttons - Scrollable Bottom */}
+            {/* Chat Input with Buttons Below */}
             <Flex
               direction="column"
               ms={{ base: '0px', xl: '60px' }}
@@ -334,13 +340,11 @@ export default function Chat() {
               bottom={0}
               bg={useColorModeValue('white', 'navy.800')}
               py={2}
-              maxH="300px" // Cap height for scroll effect
-              overflowY="auto" // Cool scroll is back!
             >
               <Box position="relative" mb="10px">
                 <Textarea
-                  minH={isInputExpanded ? '200px' : '54px'}
-                  maxH={isInputExpanded ? '400px' : '54px'}
+                  minH={isInputExpanded ? '100px' : '54px'}
+                  maxH={isInputExpanded ? '200px' : '54px'}
                   h="100%"
                   border="1px solid"
                   borderColor={borderColor}
