@@ -15,7 +15,7 @@ import {
   Button,
   Flex,
   Icon,
-  Textarea, // Switched to Textarea for multi-line input
+  Textarea,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -272,6 +272,7 @@ export default function Chat() {
               overflowY="auto"
               display={messages.length ? 'flex' : 'none'}
               mb="20px"
+              minH={{ base: '150vh', '2xl': '170vh' }} // Doubled from 75vh/85vh
             >
               {messages.map((msg, index) => (
                 <Flex key={index} w="100%" align={'center'} mb="10px">
@@ -341,13 +342,13 @@ export default function Chat() {
               py={2}
             >
               <Box position="relative" mb="10px">
-                <Textarea // Switched to Textarea for multi-line input
+                <Textarea
                   minH={isInputExpanded ? '100px' : '54px'}
                   maxH={isInputExpanded ? '200px' : '54px'}
                   h="100%"
                   border="1px solid"
                   borderColor={borderColor}
-                  borderRadius="15px" // Adjusted for Textarea
+                  borderRadius="15px"
                   p="15px 40px 15px 20px"
                   fontSize="sm"
                   fontWeight="500"
@@ -378,7 +379,7 @@ export default function Chat() {
               <Flex justify="center" gap={4}>
                 <Button
                   variant="primary"
-                  bg="blue.200" // Light blue background
+                  bg="blue.200"
                   color="white"
                   py="20px"
                   px="16px"
