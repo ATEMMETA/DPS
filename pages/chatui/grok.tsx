@@ -147,13 +147,63 @@ export default function Chat() {
           setApiKey={setApiKeyApp}
         />
 
-        <Flex
-          flex={1}
-          w="100%"
-          pt={{ base: '90px', md: '90px' }}
-          direction="column"
-          position="relative"
-        >
+        {/* Messages Display with Independent Scroll */}
+<Flex
+  direction="column"
+  w="100%"
+  mx="auto"
+  flex={1}
+  mb="20px"
+  maxH={{ base: 'calc(75vh - 150px)', '2xl': 'calc(85vh - 150px)' }} // Adjust maxH based on your layout
+  overflowY="auto"
+>
+  {messages.map((msg, index) => (
+    <Flex key={index} w="100%" align={'center'} mb="10px">
+      {/* ... message content ... */}
+    </Flex>
+  ))}
+  <div ref={messagesEndRef} />
+</Flex>
+
+{/* Chat Input and Buttons (Fixed at the bottom) */}
+<Flex
+  direction="column"
+  ms={{ base: '0px', xl: '60px' }}
+  mt="20px"
+  position="sticky"
+  bottom={0}
+  bg={useColorModeValue('white', 'navy.800')}
+  py={2}
+>
+  <Box position="relative" mb="10px">
+    <Textarea
+      // ... textarea properties ...
+    />
+    {/* ... expand/collapse icon ... */}
+  </Box>
+  <Flex justify="center" gap={4}>
+    <Button
+      // ... submit button ...
+    >
+      Submit
+    </Button>
+    <Button
+      // ... download button ...
+    >
+      Download Chat
+    </Button>
+  </Flex>
+</Flex>
+
+<Flex
+  justify="center"
+  mt="20px"
+  direction={{ base: 'column', md: 'row' }}
+  alignItems="center"
+>
+  {/* ... footer text ... */}
+</Flex>
+
           <Flex
             direction="column"
             mx="auto"
