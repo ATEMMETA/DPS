@@ -228,8 +228,8 @@ export default function Chat(props: { apiKeyApp: string }) {
           {/* Dedicated Messages Area */}
           <Box
             w="100%"
-            minH={{ base: '200vh', '2xl': '220vh' }} // Moved minH here
-            flex={1} // Take all available space
+            h={{ base: '150vh', '2xl': '170vh' }} // Force height
+            flexGrow={1} // Grow to fill space
             overflowY="auto"
             display={messages.length ? 'block' : 'none'}
             mb="20px"
@@ -331,7 +331,7 @@ export default function Chat(props: { apiKeyApp: string }) {
               onClick={handleTranslate}
               isLoading={loading}
             >
-              Submit1
+              Submit2
             </Button>
           </Flex>
         </Flex>
