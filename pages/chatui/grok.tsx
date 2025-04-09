@@ -331,7 +331,7 @@ export default function Chat(props: { apiKeyApp: string }) {
               onClick={handleTranslate}
               isLoading={loading}
             >
-              Submit
+              Submit1
             </Button>
           </Flex>
         </Flex>
