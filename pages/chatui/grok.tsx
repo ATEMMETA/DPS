@@ -15,13 +15,11 @@ import {
   Button,
   Flex,
   Icon,
-  Img,
   Input,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
-import Bg from '../public/img/chat/bg-image.png';
 
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
@@ -128,14 +126,6 @@ export default function Chat(props: { apiKeyApp: string }) {
         direction="column"
         position="relative"
       >
-        <Img
-          src={Bg.src}
-          position="absolute"
-          w="350px"
-          left="50%"
-          top="50%"
-          transform="translate(-50%, -50%)"
-        />
         <Flex
           direction="column"
           mx="auto"
