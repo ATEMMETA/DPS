@@ -339,8 +339,8 @@ export default function Chat() {
             >
               <Box position="relative" mb="10px">
                 <Textarea
-                  minH={isInputExpanded ? '100px' : '54px'}
-                  maxH={isInputExpanded ? '200px' : '54px'}
+                  minH={isInputExpanded ? '200px' : '54px'}
+                  maxH={isInputExpanded ? '400px' : '54px'}
                   h="100%"
                   border="1px solid"
                   borderColor={borderColor}
