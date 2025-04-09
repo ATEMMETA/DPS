@@ -147,337 +147,271 @@ export default function Chat() {
           setApiKey={setApiKeyApp}
         />
 
-        {/* Messages Display with Independent Scroll */}
-<Flex
-  direction="column"
-  w="100%"
-  mx="auto"
-  flex={1}
-  mb="20px"
-  maxH={{ base: 'calc(75vh - 150px)', '2xl': 'calc(85vh - 150px)' }} // Adjust maxH based on your layout
-  overflowY="auto"
->
-  {messages.map((msg, index) => (
-    <Flex key={index} w="100%" align={'center'} mb="10px">
-      {/* ... message content ... */}
-    </Flex>
-  ))}
-  <div ref={messagesEndRef} />
-</Flex>
+        <Flex flex={1} w="100%" pt={{ base: '90px', md: '90px' }} direction="column" position="relative">
 
-{/* Chat Input and Buttons (Fixed at the bottom) */}
-<Flex
-  direction="column"
-  ms={{ base: '0px', xl: '60px' }}
-  mt="20px"
-  position="sticky"
-  bottom={0}
-  bg={useColorModeValue('white', 'navy.800')}
-  py={2}
->
-  <Box position="relative" mb="10px">
-    <Textarea
-      // ... textarea properties ...
-    />
-    {/* ... expand/collapse icon ... */}
-  </Box>
-  <Flex justify="center" gap={4}>
-    <Button
-      // ... submit button ...
-    >
-      Submit
-    </Button>
-    <Button
-      // ... download button ...
-    >
-      Download Chat
-    </Button>
-  </Flex>
-</Flex>
-
-<Flex
-  justify="center"
-  mt="20px"
-  direction={{ base: 'column', md: 'row' }}
-  alignItems="center"
->
-  {/* ... footer text ... */}
-</Flex>
-
+          {/* Messages Display with Independent Scroll */}
           <Flex
             direction="column"
+            w="100%"
             mx="auto"
-            w={{ base: '100%', md: '100%', xl: '100%' }}
-            minH={{ base: '75vh', '2xl': '85vh' }}
-            maxW="1000px"
+            flex={1}
+            mb="20px"
+            maxH={{ base: 'calc(75vh - 150px)', '2xl': 'calc(85vh - 150px)' }} // Adjust maxH based on your layout
+            overflowY="auto"
           >
-            {/* Model Selection */}
-            <Flex direction={'column'} w="100%" mb={messages.length ? '20px' : 'auto'}>
-              <Flex
-                mx="auto"
-                zIndex="2"
-                w="max-content"
-                mb="20px"
-                borderRadius="60px"
-              >
+            {messages.map((msg, index) => (
+              <Flex key={index} w="100%" align={'center'} mb="10px">
                 <Flex
-                  cursor={'pointer'}
-                  transition="0.3s"
-                  justify={'center'}
+                  borderRadius="full"
+                  justify="center"
                   align="center"
-                  bg={model === 'gpt-4o' ? buttonBg : 'transparent'}
-                  w="174px"
-                  h="70px"
-                  boxShadow={model === 'gpt-4o' ? buttonShadow : 'none'}
-                  borderRadius="14px"
-                  color={textColor}
-                  fontSize="18px"
-                  fontWeight={'700'}
-                  onClick={() => setModel('gpt-4o')}
+                  bg={msg.role === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
+                  border={msg.role === 'user' ? '1px solid' : 'none'}
+                  borderColor={borderColor}
+                  me="20px"
+                  h="40px"
+                  minH="40px"
+                  minW="40px"
                 >
-                  <Flex
-                    borderRadius="full"
-                    justify="center"
-                    align="center"
-                    bg={bgIcon}
-                    me="10px"
-                    h="39px"
-                    w="39px"
-                  >
-                    <Icon
-                      as={MdAutoAwesome}
-                      width="20px"
-                      height="20px"
-                      color={iconColor}
-                    />
-                  </Flex>
-                  GPT-4o
+                  <Icon
+                    as={msg.role === 'user' ? MdPerson : MdAutoAwesome}
+                    width="20px"
+                    height="20px"
+                    color={msg.role === 'user' ? brandColor : 'white'}
+                  />
                 </Flex>
                 <Flex
-                  cursor={'pointer'}
-                  transition="0.3s"
-                  justify={'center'}
-                  align="center"
-                  bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
-                  w="164px"
-                  h="70px"
-                  boxShadow={model === 'gpt-3.5-turbo' ? buttonShadow : 'none'}
-                  borderRadius="14px"
-                  color={textColor}
-                  fontSize="18px"
-                  fontWeight={'700'}
-                  onClick={() => setModel('gpt-3.5-turbo')}
-                >
-                  <Flex
-                    borderRadius="full"
-                    justify="center"
-                    align="center"
-                    bg={bgIcon}
-                    me="10px"
-                    h="39px"
-                    w="39px"
-                  >
-                    <Icon
-                      as={MdBolt}
-                      width="20px"
-                      height="20px"
-                      color={iconColor}
-                    />
-                  </Flex>
-                  GPT-3.5
-                </Flex>
-              </Flex>
-
-              <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
-                <AccordionItem border="none">
-                  <AccordionButton
-                    borderBottom="0px solid"
-                    maxW="max-content"
-                    mx="auto"
-                    _hover={{ border: '0px solid', bg: 'none' }}
-                    _focus={{ border: '0px solid', bg: 'none' }}
-                  >
-                    <Box flex="1" textAlign="left">
-                      <Text color={gray} fontWeight="500" fontSize="sm">
-                        No plugins added
-                      </Text>
-                    </Box>
-                    <AccordionIcon color={gray} />
-                  </AccordionButton>
-                  <AccordionPanel mx="auto" w="max-content" p="0px 0px 10px 0px">
-                    <Text color={gray} fontWeight="500" fontSize="sm" textAlign={'center'}>
-                      This is a cool text example.
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
-            </Flex>
-
-            {/* Messages Display */}
-<Flex
-  direction="column"
-  w="100%"
-  mx="auto"
-  flex={1}
-  overflowY="auto"
-  display={messages.length ? 'flex' : 'none'}
-  mb="20px"
-  minH={{ base: '225vh', '2xl': '255vh' }} // Tripled from 75vh/85vh
->
-  
-
-              {messages.map((msg, index) => (
-                <Flex key={index} w="100%" align={'center'} mb="10px">
-                  <Flex
-                    borderRadius="full"
-                    justify="center"
-                    align="center"
-                    bg={msg.role === 'user' ? 'transparent' : 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
-                    border={msg.role === 'user' ? '1px solid' : 'none'}
-                    borderColor={borderColor}
-                    me="20px"
-                    h="40px"
-                    minH="40px"
-                    minW="40px"
-                  >
-                    <Icon
-                      as={msg.role === 'user' ? MdPerson : MdAutoAwesome}
-                      width="20px"
-                      height="20px"
-                      color={msg.role === 'user' ? brandColor : 'white'}
-                    />
-                  </Flex>
-                  <Flex
-                    p="22px"
-                    border="1px solid"
-                    borderColor={borderColor}
-                    borderRadius="14px"
-                    w="100%"
-                    minW={{ base: '300px', md: '400px' }}
-                    minH="60px"
-                    zIndex={'2'}
-                    whiteSpace="pre-wrap"
-                    wordBreak="break-word"
-                  >
-                    <Text
-                      color={textColor}
-                      fontWeight="600"
-                      fontSize={{ base: 'sm', md: 'md' }}
-                      lineHeight={{ base: '24px', md: '26px' }}
-                    >
-                      {msg.content}
-                    </Text>
-                    {msg.role === 'user' && (
-                      <Icon
-                        cursor="pointer"
-                        as={MdEdit}
-                        ms="auto"
-                        width="20px"
-                        height="20px"
-                        color={gray}
-                      />
-                    )}
-                  </Flex>
-                </Flex>
-              ))}
-              <div ref={messagesEndRef} />
-            </Flex>
-
-            {/* Chat Input with Buttons Below */}
-            <Flex
-              direction="column"
-              ms={{ base: '0px', xl: '60px' }}
-              mt="20px"
-              position="sticky"
-              bottom={0}
-              bg={useColorModeValue('white', 'navy.800')}
-              py={2}
-            >
-              <Box position="relative" mb="10px">
-                <Textarea
-                  minH={isInputExpanded ? '100px' : '54px'}
-                  maxH={isInputExpanded ? '200px' : '54px'}
-                  h="100%"
+                  p="22px"
                   border="1px solid"
                   borderColor={borderColor}
-                  borderRadius="15px"
-                  p="15px 40px 15px 20px"
-                  fontSize="sm"
-                  fontWeight="500"
-                  _focus={{ borderColor: 'none' }}
-                  color={inputColor}
-                  _placeholder={placeholderColor}
-                  placeholder="Type your message here..."
-                  value={inputCode}
-                  onChange={handleChange}
-                  onKeyPress={handleKeyPress}
-                  disabled={loading}
-                  resize="none"
-                  overflowY="auto"
-                />
-                <Icon
-                  as={isInputExpanded ? MdExpandLess : MdExpandMore}
-                  position="absolute"
-                  right="10px"
-                  top="50%"
-                  transform="translateY(-50%)"
-                  color={gray}
-                  w="20px"
-                  h="20px"
-                  cursor="pointer"
-                  onClick={toggleInputSize}
-                />
-              </Box>
-              <Flex justify="center" gap={4}>
-                <Button
-                  variant="primary"
-                  bg="blue.200"
-                  color="white"
-                  py="20px"
-                  px="16px"
-                  fontSize="sm"
-                  borderRadius="45px"
-                  w={{ base: '160px', md: '210px' }}
-                  h="54px"
-                  _hover={{
-                    boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
-                    bg: 'blue.300',
-                  }}
-                  onClick={handleTranslate}
-                  isLoading={loading}
+                  borderRadius="14px"
+                  w="100%"
+                  minW={{ base: '300px', md: '400px' }}
+                  minH="60px"
+                  zIndex={'2'}
+                  whiteSpace="pre-wrap"
+                  wordBreak="break-word"
                 >
-                  Submit
-                </Button>
-                <Button
-                  onClick={handleDownload}
-                  colorScheme="blue"
-                  py="20px"
-                  px="16px"
-                  fontSize="sm"
-                  borderRadius="45px"
-                  w={{ base: '160px', md: '210px' }}
-                  h="54px"
+                  <Text
+                    color={textColor}
+                    fontWeight="600"
+                    fontSize={{ base: 'sm', md: 'md' }}
+                    lineHeight={{ base: '24px', md: '26px' }}
+                  >
+                    {msg.content}
+                  </Text>
+                  {msg.role === 'user' && (
+                    <Icon
+                      cursor="pointer"
+                      as={MdEdit}
+                      ms="auto"
+                      width="20px"
+                      height="20px"
+                      color={gray}
+                    />
+                  )}
+                </Flex>
+              </Flex>
+            ))}
+            <div ref={messagesEndRef} />
+          </Flex>
+
+          {/* Chat Input and Buttons (Fixed at the bottom) */}
+          <Flex
+            direction="column"
+            ms={{ base: '0px', xl: '60px' }}
+            mt="20px"
+            position="sticky"
+            bottom={0}
+            bg={useColorModeValue('white', 'navy.800')}
+            py={2}
+          >
+            <Box position="relative" mb="10px">
+              <Textarea
+                minH={isInputExpanded ? '100px' : '54px'}
+                maxH={isInputExpanded ? '200px' : '54px'}
+                h="100%"
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="15px"
+                p="15px 40px 15px 20px"
+                fontSize="sm"
+                fontWeight="500"
+                _focus={{ borderColor: 'none' }}
+                color={inputColor}
+                _placeholder={placeholderColor}
+                placeholder="Type your message here..."
+                value={inputCode}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                disabled={loading}
+                resize="none"
+                overflowY="auto"
+              />
+              <Icon
+                as={isInputExpanded ? MdExpandLess : MdExpandMore}
+                position="absolute"
+                right="10px"
+                top="50%"
+                transform="translateY(-50%)"
+                color={gray}
+                w="20px"
+                h="20px"
+                cursor="pointer"
+                onClick={toggleInputSize}
+              />
+            </Box>
+            <Flex justify="center" gap={4}>
+              <Button
+                variant="primary"
+                bg="blue.200"
+                color="white"
+                py="20px"
+                px="16px"
+                fontSize="sm"
+                borderRadius="45px"
+                w={{ base: '160px', md: '210px' }}
+                h="54px"
+                _hover={{
+                  boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
+                  bg: 'blue.300',
+                }}
+                onClick={handleTranslate}
+                isLoading={loading}
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={handleDownload}
+                colorScheme="blue"
+                py="20px"
+                px="16px"
+                fontSize="sm"
+                borderRadius="45px"
+                w={{ base: '160px', md: '210px' }}
+                h="54px"
+              >
+                Download Chat
+              </Button>
+            </Flex>
+          </Flex>
+
+          <Flex
+            justify="center"
+            mt="20px"
+            direction={{ base: 'column', md: 'row' }}
+            alignItems="center"
+          >
+            <Text fontSize="xs" textAlign="center" color={gray}>
+              Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts.
+            </Text>
+            <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
+              <Text fontSize="xs" color={textColor} fontWeight="500" textDecoration="underline">
+                ChatGPT May 12 Version
+              </Text>
+            </Link>
+          </Flex>
+
+          {/* Model Selection - This part remains as it was */}
+          <Flex direction={'column'} w="100%" mb={messages.length ? '20px' : 'auto'}>
+            <Flex
+              mx="auto"
+              zIndex="2"
+              w="max-content"
+              mb="20px"
+              borderRadius="60px"
+            >
+              <Flex
+                cursor={'pointer'}
+                transition="0.3s"
+                justify={'center'}
+                align="center"
+                bg={model === 'gpt-4o' ? buttonBg : 'transparent'}
+                w="174px"
+                h="70px"
+                boxShadow={model === 'gpt-4o' ? buttonShadow : 'none'}
+                borderRadius="14px"
+                color={textColor}
+                fontSize="18px"
+                fontWeight={'700'}
+                onClick={() => setModel('gpt-4o')}
+              >
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg={bgIcon}
+                  me="10px"
+                  h="39px"
+                  w="39px"
                 >
-                  Download Chat
-                </Button>
+                  <Icon
+                    as={MdAutoAwesome}
+                    width="20px"
+                    height="20px"
+                    color={iconColor}
+                  />
+                </Flex>
+                GPT-4o
+              </Flex>
+              <Flex
+                cursor={'pointer'}
+                transition="0.3s"
+                justify={'center'}
+                align="center"
+                bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
+                w="164px"
+                h="70px"
+                boxShadow={model === 'gpt-3.5-turbo' ? buttonShadow : 'none'}
+                borderRadius="14px"
+                color={textColor}
+                fontSize="18px"
+                fontWeight={'700'}
+                onClick={() => setModel('gpt-3.5-turbo')}
+              >
+                <Flex
+                  borderRadius="full"
+                  justify="center"
+                  align="center"
+                  bg={bgIcon}
+                  me="10px"
+                  h="39px"
+                  w="39px"
+                >
+                  <Icon
+                    as={MdBolt}
+                    width="20px"
+                    height="20px"
+                    color={iconColor}
+                  />
+                </Flex>
+                GPT-3.5
               </Flex>
             </Flex>
 
-            <Flex
-              justify="center"
-              mt="20px"
-              direction={{ base: 'column', md: 'row' }}
-              alignItems="center"
-            >
-              <Text fontSize="xs" textAlign="center" color={gray}>
-                Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts.
-              </Text>
-              <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
-                <Text fontSize="xs" color={textColor} fontWeight="500" textDecoration="underline">
-                  ChatGPT May 12 Version
-                </Text>
-              </Link>
-            </Flex>
+            <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
+              <AccordionItem border="none">
+                <AccordionButton
+                  borderBottom="0px solid"
+                  maxW="max-content"
+                  mx="auto"
+                  _hover={{ border: '0px solid', bg: 'none' }}
+                  _focus={{ border: '0px solid', bg: 'none' }}
+                >
+                  <Box flex="1" textAlign="left">
+                    <Text color={gray} fontWeight="500" fontSize="sm">
+                      No plugins added
+                    </Text>
+                  </Box>
+                  <AccordionIcon color={gray} />
+                </AccordionButton>
+                <AccordionPanel mx="auto" w="max-content" p="0px 0px 10px 0px">
+                  <Text color={gray} fontWeight="500" fontSize="sm" textAlign={'center'}>
+                    This is a cool text example.
+                  </Text>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </Flex>
         </Flex>
       </Box>
