@@ -125,14 +125,14 @@ export default function Chat(props: { apiKeyApp: string }) {
         pt={{ base: '70px', md: '0px' }}
         direction="column"
         position="relative"
-        minH="100vh" // Ensure the whole page takes at least full viewport
+        minH="100vh"
       >
         <Flex
           direction="column"
           mx="auto"
           w={{ base: '100%', md: '100%', xl: '100%' }}
           maxW="1000px"
-          flex={1} // Allow this Flex to grow
+          flex={1}
         >
           {/* Model Selection */}
           <Flex direction="column" w="100%" mb={messages.length ? '20px' : 'auto'}>
@@ -229,8 +229,8 @@ export default function Chat(props: { apiKeyApp: string }) {
           {/* Dedicated Messages Area */}
           <Box
             w="100%"
-            minH={{ base: '100vh', '2xl': '120vh' }} // Explicit height for messages
-            overflowY="auto" // Independent scroll
+            minH={{ base: '100vh', '2xl': '120vh' }}
+            overflowY="auto"
             display={messages.length ? 'block' : 'none'}
             mb="20px"
           >
@@ -334,24 +334,8 @@ export default function Chat(props: { apiKeyApp: string }) {
               Submit
             </Button>
           </Flex>
-
-          <Flex
-            justify="center"
-            mt="20px"
-            direction={{ base: 'column', md: 'row' }}
-            alignItems="center"
-          >
-            <Text fontSize="xs" textAlign="center" color={gray}>
-              Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts.
-            </Text>
-            <Link href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">
-              <Text fontSize="xs" color={textColor} fontWeight="500" textDecoration="underline">
-                ChatGPT May 12 Version
-              </Text>
-            </Link>
-          </Flex>
         </Flex>
       </Flex>
     </>
   );
-}
+      }
