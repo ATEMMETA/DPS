@@ -15,7 +15,7 @@ import {
   Button,
   Flex,
   Icon,
-  Input,
+  Textarea, // Switched to Textarea for multi-line input
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -341,13 +341,13 @@ export default function Chat() {
               py={2}
             >
               <Box position="relative" mb="10px">
-                <Input
+                <Textarea // Switched to Textarea for multi-line input
                   minH={isInputExpanded ? '100px' : '54px'}
                   maxH={isInputExpanded ? '200px' : '54px'}
                   h="100%"
                   border="1px solid"
                   borderColor={borderColor}
-                  borderRadius="45px"
+                  borderRadius="15px" // Adjusted for Textarea
                   p="15px 40px 15px 20px"
                   fontSize="sm"
                   fontWeight="500"
@@ -375,9 +375,11 @@ export default function Chat() {
                   onClick={toggleInputSize}
                 />
               </Box>
-              <Flex justify="flex-end" gap={2}>
+              <Flex justify="center" gap={4}>
                 <Button
                   variant="primary"
+                  bg="blue.200" // Light blue background
+                  color="white"
                   py="20px"
                   px="16px"
                   fontSize="sm"
@@ -386,7 +388,7 @@ export default function Chat() {
                   h="54px"
                   _hover={{
                     boxShadow: '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
-                    bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+                    bg: 'blue.300',
                   }}
                   onClick={handleTranslate}
                   isLoading={loading}
