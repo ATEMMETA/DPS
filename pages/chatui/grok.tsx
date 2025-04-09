@@ -153,13 +153,14 @@ export default function Chat() {
           pt={{ base: '90px', md: '90px' }}
           direction="column"
           position="relative"
+          minH={{ base: '200vh', '2xl': '220vh' }} // Extend the whole container
         >
           <Flex
             direction="column"
             mx="auto"
             w={{ base: '100%', md: '100%', xl: '100%' }}
-            minH={{ base: '75vh', '2xl': '85vh' }}
             maxW="1000px"
+            h="100%" // Fill the extended height
           >
             {/* Model Selection */}
             <Flex direction={'column'} w="100%" mb={messages.length ? '20px' : 'auto'}>
@@ -272,7 +273,6 @@ export default function Chat() {
               overflowY="auto"
               display={messages.length ? 'flex' : 'none'}
               mb="20px"
-              minH={{ base: '150vh', '2xl': '170vh' }} // Doubled from 75vh/85vh
             >
               {messages.map((msg, index) => (
                 <Flex key={index} w="100%" align={'center'} mb="10px">
