@@ -26,6 +26,7 @@ export default function GrokChat() {
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // All hooks are at the top level
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -86,7 +87,7 @@ export default function GrokChat() {
       </Head>
       <Flex
         direction="column"
-        minH="100vh" // Full viewport height
+        minH="100vh"
         bg={bgColor}
         w="100%"
         mx="auto"
@@ -95,8 +96,8 @@ export default function GrokChat() {
       >
         {/* Message Area */}
         <Box
-          flex="1" // Grows to fill space
-          h="80vh" // Fixed height, adjustable
+          flex="1"
+          h="80vh"
           overflowY="auto"
           w="100%"
           bg={useColorModeValue('white', 'gray.700')}
@@ -188,7 +189,7 @@ export default function GrokChat() {
               transform="translateY(-50%)"
               w={5}
               h={5}
-              color={gray}
+              color={placeholderColor}
               cursor="pointer"
               onClick={toggleInputSize}
             />
@@ -203,7 +204,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit5
+            Submit6
           </Button>
         </Flex>
       </Flex>
