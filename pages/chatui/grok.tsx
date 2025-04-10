@@ -26,13 +26,15 @@ export default function GrokChat() {
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // All hooks are at the top level
+  // All color hooks at the top level
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
   const inputColor = useColorModeValue('gray.700', 'white');
   const placeholderColor = useColorModeValue('gray.500', 'gray.400');
   const aiBgColor = 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)';
+  const userMsgBgColor = useColorModeValue('gray.100', 'gray.600');
+  const msgAreaBgColor = useColorModeValue('white', 'gray.700');
 
   useEffect(() => {
     setMessages([{ role: 'ai', content: 'Hey there! I’m Grok, ready to chat.' }]);
@@ -100,7 +102,7 @@ export default function GrokChat() {
           h="80vh"
           overflowY="auto"
           w="100%"
-          bg={useColorModeValue('white', 'gray.700')}
+          bg={msgAreaBgColor}
           borderRadius="md"
           border="1px solid"
           borderColor={borderColor}
@@ -134,7 +136,7 @@ export default function GrokChat() {
               </Flex>
               <Box
                 p={4}
-                bg={msg.role === 'user' ? useColorModeValue('gray.100', 'gray.600') : 'transparent'}
+                bg={msg.role === 'user' ? userMsgBgColor : 'transparent'}
                 borderRadius="md"
                 maxW="70%"
                 border={msg.role === 'user' ? '1px solid' : 'none'}
@@ -204,7 +206,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit6
+            Submit7
           </Button>
         </Flex>
       </Flex>
