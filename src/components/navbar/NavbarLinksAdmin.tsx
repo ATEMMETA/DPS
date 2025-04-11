@@ -20,14 +20,16 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { MdInfoOutline } from 'react-icons/md';
 import APIModal from '@/components/apiModal';
 import NavLink from '../link/NavLink';
-import routes from '@/routes';
+import { IRoute } from '@/types/navigation'; // Import IRoute
+import routes from '@/routes'; // Default import if not passed
 
 export default function HeaderLinks(props: {
   secondary: boolean;
   setApiKey: any;
-  onClose?: () => void; // Add onClose as optional
+  onClose?: () => void;
+  routes?: IRoute[]; // Add routes as optional prop
 }) {
-  const { secondary, setApiKey, onClose } = props;
+  const { secondary, setApiKey, onClose, routes: propRoutes } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   const navbarIcon = useColorModeValue('gray.500', 'white');
   let menuBg = useColorModeValue('white', 'navy.800');
@@ -46,6 +48,7 @@ export default function HeaderLinks(props: {
     { bg: 'gray.200' },
     { bg: 'whiteAlpha.200' },
   );
+  const finalRoutes = propRoutes || routes; // Use prop routes or fallback to imported routes
 
   return (
     <Flex
@@ -64,7 +67,7 @@ export default function HeaderLinks(props: {
         me="10px"
         borderRadius="30px"
       />
-      <SidebarResponsive routes={routes} />
+      <SidebarResponsive routes={finalRoutes} /> {/* Pass routes */}
       <APIModal setApiKey={setApiKey} />
 
       <Menu>
@@ -218,7 +221,7 @@ export default function HeaderLinks(props: {
                 color={textColor}
                 borderRadius="8px"
                 px="14px"
-                onClick={onClose} // Close sidebar on click
+                onClick={onClose}
               >
                 <Text fontWeight="500" fontSize="sm">
                   Profile Settings
@@ -231,7 +234,7 @@ export default function HeaderLinks(props: {
               color={textColor}
               borderRadius="8px"
               px="14px"
-              onClick={onClose} // Close sidebar on click
+              onClick={onClose}
             >
               <Text fontWeight="500" fontSize="sm">
                 Newsletter Settings
@@ -243,7 +246,7 @@ export default function HeaderLinks(props: {
               color="red.400"
               borderRadius="8px"
               px="14px"
-              onClick={onClose} // Close sidebar on click
+              onClick={onClose}
             >
               <Text fontWeight="500" fontSize="sm">
                 Log out
