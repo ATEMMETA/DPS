@@ -12,8 +12,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAutoAwesome, MdPerson, MdExpandMore, MdExpandLess } from 'react-icons/md';
-import AdminNavbar from '@/components/navbar/NavbarAdmin'; // Re-import navbar
-import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin'; // Re-import navbar links
+import AdminNavbar from '@/components/navbar/NavbarAdmin';
+import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin';
 
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
@@ -28,6 +28,7 @@ export default function GrokChat() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // Sidebar toggle state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // All hooks at the top level
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -36,6 +37,7 @@ export default function GrokChat() {
   const aiBgColor = 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)';
   const userMsgBgColor = useColorModeValue('gray.100', 'gray.600');
   const msgAreaBgColor = useColorModeValue('white', 'gray.700');
+  const sidebarBgColor = useColorModeValue('white', 'gray.800'); // Moved up here
 
   useEffect(() => {
     setMessages([{ role: 'ai' as const, content: 'Hey there! I’m Grok, ready to chat.' }]);
@@ -99,16 +101,16 @@ export default function GrokChat() {
           secondary={false}
           brandText="Grok Chat"
           logoText="DPS"
-          onOpen={toggleSidebar} // Toggle sidebar
-          setApiKey={() => {}} // Placeholder; update if API key modal needed
-          fixed // Optional: make navbar fixed
+          onOpen={toggleSidebar}
+          setApiKey={() => {}}
+          fixed
         />
 
         {/* Main Content */}
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '90px', md: '90px' }} // Adjust for navbar height
+          pt={{ base: '90px', md: '90px' }}
           direction="column"
           position="relative"
           maxW="1000px"
@@ -225,12 +227,12 @@ export default function GrokChat() {
               mx="auto"
               w={{ base: 'full', md: '200px' }}
             >
-              Submit16
+              Submit17
             </Button>
           </Flex>
         </Flex>
 
-        {/* Sidebar (assuming it’s part of NavbarLinksAdmin) */}
+        {/* Sidebar */}
         {isOpen && (
           <Box
             position="fixed"
@@ -238,7 +240,7 @@ export default function GrokChat() {
             left="0"
             h="100vh"
             w="250px"
-            bg={useColorModeValue('white', 'gray.800')}
+            bg={sidebarBgColor} // Use precomputed value
             boxShadow="md"
             zIndex="10"
           >
