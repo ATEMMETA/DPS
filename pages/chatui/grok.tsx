@@ -37,7 +37,7 @@ export default function GrokChat() {
   const aiBgColor = 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)';
   const userMsgBgColor = useColorModeValue('gray.100', 'gray.600');
   const msgAreaBgColor = useColorModeValue('white', 'gray.700');
-  const sidebarBgColor = useColorModeValue('white', 'gray.800'); // Moved up here
+  const sidebarBgColor = useColorModeValue('white', 'gray.800');
 
   useEffect(() => {
     setMessages([{ role: 'ai' as const, content: 'Hey there! I’m Grok, ready to chat.' }]);
@@ -103,7 +103,6 @@ export default function GrokChat() {
           logoText="DPS"
           onOpen={toggleSidebar}
           setApiKey={() => {}}
-          fixed
         />
 
         {/* Main Content */}
@@ -227,7 +226,7 @@ export default function GrokChat() {
               mx="auto"
               w={{ base: 'full', md: '200px' }}
             >
-              Submit17
+              Submit18
             </Button>
           </Flex>
         </Flex>
@@ -240,7 +239,7 @@ export default function GrokChat() {
             left="0"
             h="100vh"
             w="250px"
-            bg={sidebarBgColor} // Use precomputed value
+            bg={sidebarBgColor}
             boxShadow="md"
             zIndex="10"
           >
