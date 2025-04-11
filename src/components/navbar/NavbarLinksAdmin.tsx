@@ -20,14 +20,14 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { MdInfoOutline } from 'react-icons/md';
 import APIModal from '@/components/apiModal';
 import NavLink from '../link/NavLink';
-import { IRoute } from '@/types/navigation'; // Import IRoute
-import routes from '@/routes'; // Default import if not passed
+import { IRoute } from '@/types/navigation';
+import routes from '@/routes';
 
 export default function HeaderLinks(props: {
   secondary: boolean;
   setApiKey: any;
   onClose?: () => void;
-  routes?: IRoute[]; // Add routes as optional prop
+  routes?: IRoute[];
 }) {
   const { secondary, setApiKey, onClose, routes: propRoutes } = props;
   const { colorMode, toggleColorMode } = useColorMode();
@@ -48,7 +48,7 @@ export default function HeaderLinks(props: {
     { bg: 'gray.200' },
     { bg: 'whiteAlpha.200' },
   );
-  const finalRoutes = propRoutes || routes; // Use prop routes or fallback to imported routes
+  const finalRoutes = propRoutes || routes;
 
   return (
     <Flex
@@ -67,7 +67,7 @@ export default function HeaderLinks(props: {
         me="10px"
         borderRadius="30px"
       />
-      <SidebarResponsive routes={finalRoutes} /> {/* Pass routes */}
+      <SidebarResponsive routes={finalRoutes} />
       <APIModal setApiKey={setApiKey} />
 
       <Menu>
