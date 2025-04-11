@@ -14,6 +14,7 @@ import {
 import { MdAutoAwesome, MdPerson, MdExpandMore, MdExpandLess } from 'react-icons/md';
 import AdminNavbar from '@/components/navbar/NavbarAdmin';
 import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin';
+import routes from '@/routes'; // Import routes
 
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
@@ -108,7 +109,7 @@ export default function GrokChat() {
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '90px', md: '90px' }}
+          pt={{ base: '120px', md: '120px' }} // Increased from 90px to 120px
           direction="column"
           position="relative"
           maxW="1000px"
@@ -225,7 +226,7 @@ export default function GrokChat() {
               mx="auto"
               w={{ base: 'full', md: '200px' }}
             >
-              Submit20
+              Submit21
             </Button>
           </Flex>
         </Flex>
@@ -246,6 +247,7 @@ export default function GrokChat() {
               secondary={false}
               setApiKey={() => {}}
               onClose={toggleSidebar}
+              routes={routes} // Pass routes here
             />
           </Box>
         )}
