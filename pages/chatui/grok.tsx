@@ -51,11 +51,12 @@ export default function GrokChat() {
     setLoading(true);
 
     try {
-      const result = await chatModel.generate({
+      const result = await chatModel.doGenerate({
+        inputFormat: 'prompt',
         prompt: inputCode,
         maxTokens: 500,
       });
-      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.text }] as { role: 'user' | 'ai'; content: string }[]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.output }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong.';
       setMessages((prev) => [...prev, { role: 'ai' as const, content: `Error: ${errorMessage}` }] as { role: 'user' | 'ai'; content: string }[]);
@@ -203,7 +204,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit10
+            Submit11
           </Button>
         </Flex>
       </Flex>
