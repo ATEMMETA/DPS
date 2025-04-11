@@ -114,7 +114,7 @@ const routes: IRoute[] = [
     name: 'My plan',
     disabled: true,
     path: '/my-plan',
-    icon: <Icon as={RoundedChart} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
     invisible: true,
     collapse: false,
   },
@@ -166,7 +166,7 @@ const routes: IRoute[] = [
     icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
     invisible: true,
     collapse: false,
-  }, // <--- Add this closing curly bracket
+  },
   {
     name: 'FAQs Content',
     disabled: true,
@@ -175,7 +175,6 @@ const routes: IRoute[] = [
     invisible: true,
     collapse: false,
   },
-  // ... (rest of your route objects) ...
 ];
 
 export default routes;
