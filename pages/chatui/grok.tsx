@@ -12,6 +12,8 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { MdAutoAwesome, MdPerson, MdExpandMore, MdExpandLess } from 'react-icons/md';
+import AdminNavbar from '@/components/navbar/NavbarAdmin'; // Re-import navbar
+import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin'; // Re-import navbar links
 
 const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
@@ -23,6 +25,7 @@ export default function GrokChat() {
   const [inputCode, setInputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false); // Sidebar toggle state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const bgColor = useColorModeValue('gray.50', 'gray.800');
@@ -81,134 +84,168 @@ export default function GrokChat() {
     setIsInputExpanded(!isInputExpanded);
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
       <Head>
         <title>Grok Chat</title>
       </Head>
-      <Flex
-        direction="column"
-        minH="100vh"
-        bg={bgColor}
-        w="100%"
-        mx="auto"
-        maxW="1000px"
-        p={4}
-      >
-        {/* Message Area */}
-        <Box
-          flex="1"
-          h="80vh"
-          overflowY="auto"
-          w="100%"
-          bg={msgAreaBgColor}
-          borderRadius="md"
-          border="1px solid"
-          borderColor={borderColor}
-          p={4}
-          mb={4}
-        >
-          {messages.map((msg, index) => (
-            <Flex
-              key={index}
-              w="100%"
-              mb={4}
-              direction={msg.role === 'user' ? 'row-reverse' : 'row'}
-            >
-              <Flex
-                align="center"
-                justify="center"
-                w="40px"
-                h="40px"
-                borderRadius="full"
-                bg={msg.role === 'user' ? 'transparent' : aiBgColor}
-                border={msg.role === 'user' ? '2px solid' : 'none'}
-                borderColor={borderColor}
-                mx={2}
-              >
-                <Icon
-                  as={msg.role === 'user' ? MdPerson : MdAutoAwesome}
-                  w={5}
-                  h={5}
-                  color={msg.role === 'user' ? inputColor : 'white'}
-                />
-              </Flex>
-              <Box
-                p={4}
-                bg={msg.role === 'user' ? userMsgBgColor : 'transparent'}
-                borderRadius="md"
-                maxW="70%"
-                border={msg.role === 'user' ? '1px solid' : 'none'}
-                borderColor={borderColor}
-              >
-                <Text color={textColor} fontSize="md">
-                  {msg.content}
-                </Text>
-              </Box>
-            </Flex>
-          ))}
-          <div ref={messagesEndRef} />
-        </Box>
+      <Box minH="100vh" display="flex" flexDirection="column" bg={bgColor}>
+        {/* Navbar */}
+        <AdminNavbar
+          secondary={false}
+          brandText="Grok Chat"
+          logoText="DPS"
+          onOpen={toggleSidebar} // Toggle sidebar
+          setApiKey={() => {}} // Placeholder; update if API key modal needed
+          fixed // Optional: make navbar fixed
+        />
 
-        {/* Input Area */}
+        {/* Main Content */}
         <Flex
-          direction="column"
-          position="sticky"
-          bottom={0}
+          flex={1}
           w="100%"
-          bg={bgColor}
-          p={2}
-          borderTop="1px solid"
-          borderColor={borderColor}
-          maxH="300px"
-          overflowY="auto"
+          pt={{ base: '90px', md: '90px' }} // Adjust for navbar height
+          direction="column"
+          position="relative"
+          maxW="1000px"
+          mx="auto"
+          px={4}
         >
-          <Box position="relative" mb={2}>
-            <Textarea
-              value={inputCode}
-              onChange={handleChange}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message here..."
-              minH={isInputExpanded ? '120px' : '60px'}
-              maxH={isInputExpanded ? '200px' : '60px'}
-              border="1px solid"
-              borderColor={borderColor}
-              borderRadius="md"
-              p="10px 40px 10px 15px"
-              fontSize="sm"
-              color={inputColor}
-              _placeholder={{ color: placeholderColor }}
-              _focus={{ borderColor: 'blue.500' }}
-              resize="none"
-              disabled={loading}
-            />
-            <Icon
-              as={isInputExpanded ? MdExpandLess : MdExpandMore}
-              position="absolute"
-              right="10px"
-              top="50%"
-              transform="translateY(-50%)"
-              w={5}
-              h={5}
-              color={placeholderColor}
-              cursor="pointer"
-              onClick={toggleInputSize}
-            />
-          </Box>
-          <Button
-            onClick={handleSubmit}
-            isLoading={loading}
-            colorScheme="blue"
+          {/* Message Area */}
+          <Box
+            flex="1"
+            h="80vh"
+            overflowY="auto"
+            w="100%"
+            bg={msgAreaBgColor}
             borderRadius="md"
-            py={6}
-            px={8}
-            mx="auto"
-            w={{ base: 'full', md: '200px' }}
+            border="1px solid"
+            borderColor={borderColor}
+            p={4}
+            mb={4}
           >
-            Submit15
-          </Button>
+            {messages.map((msg, index) => (
+              <Flex
+                key={index}
+                w="100%"
+                mb={4}
+                direction={msg.role === 'user' ? 'row-reverse' : 'row'}
+              >
+                <Flex
+                  align="center"
+                  justify="center"
+                  w="40px"
+                  h="40px"
+                  borderRadius="full"
+                  bg={msg.role === 'user' ? 'transparent' : aiBgColor}
+                  border={msg.role === 'user' ? '2px solid' : 'none'}
+                  borderColor={borderColor}
+                  mx={2}
+                >
+                  <Icon
+                    as={msg.role === 'user' ? MdPerson : MdAutoAwesome}
+                    w={5}
+                    h={5}
+                    color={msg.role === 'user' ? inputColor : 'white'}
+                  />
+                </Flex>
+                <Box
+                  p={4}
+                  bg={msg.role === 'user' ? userMsgBgColor : 'transparent'}
+                  borderRadius="md"
+                  maxW="70%"
+                  border={msg.role === 'user' ? '1px solid' : 'none'}
+                  borderColor={borderColor}
+                >
+                  <Text color={textColor} fontSize="md">
+                    {msg.content}
+                  </Text>
+                </Box>
+              </Flex>
+            ))}
+            <div ref={messagesEndRef} />
+          </Box>
+
+          {/* Input Area */}
+          <Flex
+            direction="column"
+            position="sticky"
+            bottom={0}
+            w="100%"
+            bg={bgColor}
+            p={2}
+            borderTop="1px solid"
+            borderColor={borderColor}
+            maxH="300px"
+            overflowY="auto"
+          >
+            <Box position="relative" mb={2}>
+              <Textarea
+                value={inputCode}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message here..."
+                minH={isInputExpanded ? '120px' : '60px'}
+                maxH={isInputExpanded ? '200px' : '60px'}
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="md"
+                p="10px 40px 10px 15px"
+                fontSize="sm"
+                color={inputColor}
+                _placeholder={{ color: placeholderColor }}
+                _focus={{ borderColor: 'blue.500' }}
+                resize="none"
+                disabled={loading}
+              />
+              <Icon
+                as={isInputExpanded ? MdExpandLess : MdExpandMore}
+                position="absolute"
+                right="10px"
+                top="50%"
+                transform="translateY(-50%)"
+                w={5}
+                h={5}
+                color={placeholderColor}
+                cursor="pointer"
+                onClick={toggleInputSize}
+              />
+            </Box>
+            <Button
+              onClick={handleSubmit}
+              isLoading={loading}
+              colorScheme="blue"
+              borderRadius="md"
+              py={6}
+              px={8}
+              mx="auto"
+              w={{ base: 'full', md: '200px' }}
+            >
+              Submit16
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
+
+        {/* Sidebar (assuming it’s part of NavbarLinksAdmin) */}
+        {isOpen && (
+          <Box
+            position="fixed"
+            top="0"
+            left="0"
+            h="100vh"
+            w="250px"
+            bg={useColorModeValue('white', 'gray.800')}
+            boxShadow="md"
+            zIndex="10"
+          >
+            <NavbarLinksAdmin onClose={toggleSidebar} />
+          </Box>
+        )}
+      </Box>
     </>
   );
 }
