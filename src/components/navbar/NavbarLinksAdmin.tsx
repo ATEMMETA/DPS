@@ -1,5 +1,4 @@
 'use client';
-// Chakra Imports
 import {
   Box,
   Button,
@@ -26,10 +25,10 @@ import routes from '@/routes';
 export default function HeaderLinks(props: {
   secondary: boolean;
   setApiKey: any;
+  onClose?: () => void; // Add onClose as optional
 }) {
-  const { secondary, setApiKey } = props;
+  const { secondary, setApiKey, onClose } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  // Chakra Color Mode
   const navbarIcon = useColorModeValue('gray.500', 'white');
   let menuBg = useColorModeValue('white', 'navy.800');
   const textColor = useColorModeValue('navy.700', 'white');
@@ -61,12 +60,7 @@ export default function HeaderLinks(props: {
       boxShadow={shadow}
     >
       <SearchBar
-        mb={() => {
-          if (secondary) {
-            return { base: '10px', md: 'unset' };
-          }
-          return 'unset';
-        }}
+        mb={() => (secondary ? { base: '10px', md: 'unset' } : 'unset')}
         me="10px"
         borderRadius="30px"
       />
@@ -95,7 +89,6 @@ export default function HeaderLinks(props: {
           minW={{ base: 'unset' }}
           maxW={{ base: '360px', md: 'unset' }}
         >
-          {/* <Flex bgImage={navImage} borderRadius="16px" mb="28px" alt="" /> */}
           <Flex flexDirection="column">
             <Link
               isExternal
@@ -214,7 +207,7 @@ export default function HeaderLinks(props: {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, Adela
+              👋  Hey, Adela
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">
@@ -225,6 +218,7 @@ export default function HeaderLinks(props: {
                 color={textColor}
                 borderRadius="8px"
                 px="14px"
+                onClick={onClose} // Close sidebar on click
               >
                 <Text fontWeight="500" fontSize="sm">
                   Profile Settings
@@ -237,6 +231,7 @@ export default function HeaderLinks(props: {
               color={textColor}
               borderRadius="8px"
               px="14px"
+              onClick={onClose} // Close sidebar on click
             >
               <Text fontWeight="500" fontSize="sm">
                 Newsletter Settings
@@ -248,6 +243,7 @@ export default function HeaderLinks(props: {
               color="red.400"
               borderRadius="8px"
               px="14px"
+              onClick={onClose} // Close sidebar on click
             >
               <Text fontWeight="500" fontSize="sm">
                 Log out
