@@ -28,7 +28,6 @@ export default function GrokChat() {
   const [isOpen, setIsOpen] = useState<boolean>(false); // Sidebar toggle state
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // All hooks at the top level
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -226,7 +225,7 @@ export default function GrokChat() {
               mx="auto"
               w={{ base: 'full', md: '200px' }}
             >
-              Submit18
+              Submit20
             </Button>
           </Flex>
         </Flex>
@@ -243,7 +242,11 @@ export default function GrokChat() {
             boxShadow="md"
             zIndex="10"
           >
-            <NavbarLinksAdmin onClose={toggleSidebar} />
+            <NavbarLinksAdmin
+              secondary={false}
+              setApiKey={() => {}}
+              onClose={toggleSidebar}
+            />
           </Box>
         )}
       </Box>
