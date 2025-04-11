@@ -56,6 +56,8 @@ export default function GrokChat() {
         model: chatModel,
         prompt: inputCode,
         maxTokens: 500,
+        // Explicitly set mode to avoid tools conflict
+        mode: { type: 'regular' },
       });
       setMessages((prev) => [...prev, { role: 'ai' as const, content: text }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
@@ -205,7 +207,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit8
+            Submit9
           </Button>
         </Flex>
       </Flex>
