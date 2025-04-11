@@ -52,8 +52,8 @@ export default function GrokChat() {
 
     try {
       const result = await chatModel.doGenerate({
-        inputFormat: 'prompt',
-        prompt: inputCode,
+        inputFormat: 'messages',
+        prompt: [{ role: 'user', content: inputCode }],
         maxTokens: 500,
       });
       setMessages((prev) => [...prev, { role: 'ai' as const, content: result.output }] as { role: 'user' | 'ai'; content: string }[]);
@@ -204,7 +204,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit11
+            Submit12
           </Button>
         </Flex>
       </Flex>
