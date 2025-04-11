@@ -53,6 +53,7 @@ export default function GrokChat() {
     try {
       const result = await chatModel.doGenerate({
         inputFormat: 'messages',
+        mode: { type: 'regular' },
         prompt: [{ role: 'user', content: [{ type: 'text', text: inputCode }] }],
         maxTokens: 500,
       });
@@ -204,7 +205,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit13
+            Submit14
           </Button>
         </Flex>
       </Flex>
