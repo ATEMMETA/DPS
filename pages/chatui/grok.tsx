@@ -109,7 +109,7 @@ export default function GrokChat() {
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '150px', md: '150px' }} // Increased to 150px
+          pt={{ base: '180px', md: '180px' }} // Increased to 180px
           direction="column"
           position="relative"
           maxW="1000px"
@@ -226,7 +226,7 @@ export default function GrokChat() {
               mx="auto"
               w={{ base: 'full', md: '200px' }}
             >
-              Submit22
+              Submit23
             </Button>
           </Flex>
         </Flex>
