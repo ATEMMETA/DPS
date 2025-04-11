@@ -26,7 +26,6 @@ export default function GrokChat() {
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // All color hooks at the top level
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -37,7 +36,7 @@ export default function GrokChat() {
   const msgAreaBgColor = useColorModeValue('white', 'gray.700');
 
   useEffect(() => {
-    setMessages([{ role: 'ai', content: 'Hey there! I’m Grok, ready to chat.' }]);
+    setMessages([{ role: 'ai' as const, content: 'Hey there! I’m Grok, ready to chat.' }]);
   }, []);
 
   useEffect(() => {
@@ -47,8 +46,8 @@ export default function GrokChat() {
   const handleSubmit = async () => {
     if (!inputCode.trim()) return;
 
-    const userMessage = { role: 'user', content: inputCode };
-    setMessages((prev) => [...prev, userMessage]);
+    const userMessage = { role: 'user' as const, content: inputCode };
+    setMessages((prev) => [...prev, userMessage] as { role: 'user' | 'ai'; content: string }[]);
     setInputCode('');
     setLoading(true);
 
@@ -58,10 +57,10 @@ export default function GrokChat() {
         prompt: inputCode,
         maxTokens: 500,
       });
-      setMessages((prev) => [...prev, { role: 'ai', content: text }]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: text }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong.';
-      setMessages((prev) => [...prev, { role: 'ai', content: `Error: ${errorMessage}` }]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: `Error: ${errorMessage}` }] as { role: 'user' | 'ai'; content: string }[]);
     } finally {
       setLoading(false);
     }
@@ -206,7 +205,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit7
+            Submit8
           </Button>
         </Flex>
       </Flex>
