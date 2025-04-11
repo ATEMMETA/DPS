@@ -6,11 +6,11 @@ import {
   List,
   ListItem,
   Text,
+  Link as ChakraLink, // Use Chakra's Link
   useColorModeValue,
 } from '@chakra-ui/react';
-import Link from '@/components/link/Link';
 
-export default function Footer() {
+export default function FooterAdmin() { // Renamed for consistency
   const textColor = useColorModeValue('gray.500', 'white');
   return (
     <Flex
@@ -35,7 +35,7 @@ export default function Footer() {
         mb={{ base: '10px', xl: '0px' }}
       >
         {' '}
-        &copy; {new Date().getFullYear()}
+        © {new Date().getFullYear()}
         <Text as="span" fontWeight="500" ms="4px">
           DPS - Dependency Helper. All Rights Reserved.
         </Text>
@@ -47,14 +47,14 @@ export default function Footer() {
             md: '44px',
           }}
         >
-          <Link
+          <ChakraLink
             fontWeight="500"
             fontSize={{ base: 'xs', md: 'sm' }}
             color={textColor}
             href="https://horizon-ui.com/pro"
           >
             Homepage
-          </Link>
+          </ChakraLink>
         </ListItem>
         <ListItem
           me={{
@@ -62,14 +62,14 @@ export default function Footer() {
             md: '44px',
           }}
         >
-          <Link
+          <ChakraLink
             fontWeight="500"
             fontSize={{ base: 'xs', md: 'sm' }}
             color={textColor}
             href="https://horizon-ui.notion.site/End-User-License-Agreement-8fb09441ea8c4c08b60c37996195a6d5"
           >
             License
-          </Link>
+          </ChakraLink>
         </ListItem>
         <ListItem
           me={{
@@ -77,24 +77,24 @@ export default function Footer() {
             md: '44px',
           }}
         >
-          <Link
+          <ChakraLink
             fontWeight="500"
             fontSize={{ base: 'xs', md: 'sm' }}
             color={textColor}
             href="https://horizon-ui.notion.site/Terms-Conditions-6e79229d25ed48f48a481962bc6de3ee"
           >
             Terms of Use
-          </Link>
+          </ChakraLink>
         </ListItem>
         <ListItem>
-          <Link
+          <ChakraLink
             fontWeight="500"
             fontSize={{ base: 'xs', md: 'sm' }}
             color={textColor}
             href="https://horizon-ui.notion.site/Privacy-Policy-8addde50aa8e408ca5c5f5811c38f971"
           >
             Privacy Policy
-          </Link>
+          </ChakraLink>
         </ListItem>
       </List>
     </Flex>
