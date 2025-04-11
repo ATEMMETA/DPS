@@ -57,7 +57,7 @@ export default function GrokChat() {
         prompt: [{ role: 'user', content: [{ type: 'text', text: inputCode }] }],
         maxTokens: 500,
       });
-      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.output }] as { role: 'user' | 'ai'; content: string }[]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.text ?? 'No response' }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong.';
       setMessages((prev) => [...prev, { role: 'ai' as const, content: `Error: ${errorMessage}` }] as { role: 'user' | 'ai'; content: string }[]);
@@ -205,7 +205,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit14
+            Submit15
           </Button>
         </Flex>
       </Flex>
