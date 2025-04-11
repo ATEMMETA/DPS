@@ -1,6 +1,5 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { generateText } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import Head from 'next/head';
 import {
@@ -52,14 +51,11 @@ export default function GrokChat() {
     setLoading(true);
 
     try {
-      const { text } = await generateText({
-        model: chatModel,
+      const result = await chatModel.generate({
         prompt: inputCode,
         maxTokens: 500,
-        // Explicitly set mode to avoid tools conflict
-        mode: { type: 'regular' },
       });
-      setMessages((prev) => [...prev, { role: 'ai' as const, content: text }] as { role: 'user' | 'ai'; content: string }[]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.text }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong.';
       setMessages((prev) => [...prev, { role: 'ai' as const, content: `Error: ${errorMessage}` }] as { role: 'user' | 'ai'; content: string }[]);
@@ -207,7 +203,7 @@ export default function GrokChat() {
             mx="auto"
             w={{ base: 'full', md: '200px' }}
           >
-            Submit9
+            Submit10
           </Button>
         </Flex>
       </Flex>
