@@ -1,7 +1,4 @@
 'use client';
-/* eslint-disable */
-
-// chakra imports
 import {
   Accordion,
   AccordionButton,
@@ -20,29 +17,24 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { FaCircle } from 'react-icons/fa';
-import { IoMdAdd } from 'react-icons/io';
 import NavLink from '@/components/link/NavLink';
 import { IRoute } from '@/types/navigation';
-import { PropsWithChildren, useCallback } from 'react';
+import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
-interface SidebarLinksProps extends PropsWithChildren {
+interface SidebarLinksProps {
   routes: IRoute[];
+  onClose?: () => void; // Added for mobile
 }
 
-export function SidebarLinks(props: SidebarLinksProps) {
-  //   Chakra color mode
+export function SidebarLinks({ routes, onClose }: SidebarLinksProps) {
   const pathname = usePathname();
-  let activeColor = useColorModeValue('navy.700', 'white');
-  let inactiveColor = useColorModeValue('gray.500', 'gray.500');
-  let borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
-  let activeIcon = useColorModeValue('brand.500', 'white');
-  let iconColor = useColorModeValue('navy.700', 'white');
-  let gray = useColorModeValue('gray.500', 'gray.500');
+  const activeColor = useColorModeValue('navy.700', 'white');
+  const inactiveColor = useColorModeValue('gray.500', 'gray.500');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
+  const activeIcon = useColorModeValue('brand.500', 'white');
+  const gray = useColorModeValue('gray.500', 'gray.500');
 
-  const { routes } = props;
-
-  // verifies if routeName is the one active (in browser input)
   const activeRoute = useCallback(
     (routeName: string) => {
       return pathname?.includes(routeName);
@@ -50,41 +42,30 @@ export function SidebarLinks(props: SidebarLinksProps) {
     [pathname],
   );
 
-  // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes: IRoute[]) => {
     return routes.map((route, key) => {
       if (route.collapse && !route.invisible) {
         return (
           <Accordion defaultIndex={0} allowToggle key={key}>
-            <Flex w="100%" justifyContent={'space-between'}>
-              <AccordionItem isDisabled border="none" mb="14px" key={key}>
+            <Flex w="100%" justifyContent="space-between">
+              <AccordionItem border="none" mb="14px">
                 <AccordionButton
                   display="flex"
                   alignItems="center"
                   mb="4px"
                   justifyContent="center"
-                  _hover={{
-                    bg: 'unset',
-                  }}
-                  _focus={{
-                    boxShadow: 'none',
-                  }}
+                  _hover={{ bg: 'unset' }}
+                  _focus={{ boxShadow: 'none' }}
                   borderRadius="8px"
                   w="100%"
                   py="0px"
                   ms={0}
                 >
                   {route.icon ? (
-                    <Flex
-                      align="center"
-                      justifyContent="space-between"
-                      w="100%"
-                    >
+                    <Flex align="center" justifyContent="space-between" w="100%">
                       <HStack
                         spacing={
-                          activeRoute(route.path.toLowerCase())
-                            ? '22px'
-                            : '26px'
+                          activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
                         }
                       >
                         <Flex
@@ -106,14 +87,13 @@ export function SidebarLinks(props: SidebarLinksProps) {
                             {route.icon}
                           </Box>
                           <Text
-                            cursor="not-allowed"
                             me="auto"
                             color={
                               route.disabled
                                 ? gray
                                 : activeRoute(route.path.toLowerCase())
                                 ? activeColor
-                                : 'gray.500'
+                                : inactiveColor
                             }
                             fontWeight="500"
                             letterSpacing="0px"
@@ -128,38 +108,38 @@ export function SidebarLinks(props: SidebarLinksProps) {
                     <Flex pt="0px" pb="10px" alignItems="center" w="100%">
                       <HStack
                         spacing={
-                          activeRoute(route.path.toLowerCase())
-                            ? '22px'
-                            : '26px'
+                          activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
                         }
                         ps="32px"
                       >
                         <Text
-                          cursor="not-allowed"
                           me="auto"
                           fontWeight="500"
                           letterSpacing="0px"
                           fontSize="sm"
+                          color={
+                            route.disabled
+                              ? gray
+                              : activeRoute(route.path.toLowerCase())
+                              ? activeColor
+                              : inactiveColor
+                            }
                         >
                           {route.name}
                         </Text>
                       </HStack>
                       <AccordionIcon
                         ms="auto"
-                        color={route.disabled ? gray : 'gray.500'}
+                        color={route.disabled ? gray : inactiveColor}
                       />
                     </Flex>
                   )}
                 </AccordionButton>
-                <AccordionPanel py="0px" ps={'8px'}>
+                <AccordionPanel py="0px" ps="8px">
                   <List>
-                    {
-                      route.icon && route.items
-                        ? createLinks(route.items) // for bullet accordion links
-                        : route.items
-                        ? createAccordionLinks(route.items)
-                        : '' // for non-bullet accordion links
-                    }
+                    {route.items
+                      ? createAccordionLinks(route.items)
+                      : ''}
                   </List>
                 </AccordionPanel>
               </AccordionItem>
@@ -173,7 +153,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                   colorScheme="brand"
                   borderRadius="25px"
                   color="brand.500"
-                  textTransform={'none'}
+                  textTransform="none"
                   letterSpacing="0px"
                   px="8px"
                 >
@@ -193,67 +173,28 @@ export function SidebarLinks(props: SidebarLinksProps) {
                 w="100%"
                 maxW="100%"
                 ps="17px"
-                mb="0px"
+                mb="14px"
               >
                 <HStack
                   w="100%"
-                  mb="14px"
                   spacing={
                     activeRoute(route.path.toLowerCase()) ? '22px' : '26px'
                   }
                 >
-                  {route.name === 'Chat UI' ? (
-                    <NavLink
-                      href={
-                        route.layout ? route.layout + route.path : route.path
-                      }
-                      key={key}
-                      styles={{ width: '100%' }}
-                    >
-                      <Flex
-                        w="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Box
-                          color={
-                            route.disabled
-                              ? gray
-                              : activeRoute(route.path.toLowerCase())
-                              ? activeIcon
-                              : inactiveColor
-                          }
-                          me="12px"
-                          mt="6px"
-                        >
-                          {route.icon}
-                        </Box>
-                        <Text
-                          me="auto"
-                          color={
-                            route.disabled
-                              ? gray
-                              : activeRoute(route.path.toLowerCase())
-                              ? activeColor
-                              : 'gray.500'
-                          }
-                          fontWeight="500"
-                          letterSpacing="0px"
-                          fontSize="sm"
-                        >
-                          {route.name}
-                        </Text>
-                      </Flex>
-                    </NavLink>
-                  ) : (
+                  <NavLink
+                    href={route.layout ? route.layout + route.path : route.path}
+                    key={key}
+                    styles={{ width: '100%' }}
+                    onClick={onClose}
+                  >
                     <Flex
                       w="100%"
                       alignItems="center"
                       justifyContent="center"
-                      cursor="not-allowed"
+                      cursor={route.disabled ? 'not-allowed' : 'pointer'}
+                      opacity={route.disabled ? 0.4 : 1}
                     >
                       <Box
-                        opacity="0.4"
                         color={
                           route.disabled
                             ? gray
@@ -267,14 +208,13 @@ export function SidebarLinks(props: SidebarLinksProps) {
                         {route.icon}
                       </Box>
                       <Text
-                        opacity="0.4"
                         me="auto"
                         color={
                           route.disabled
                             ? gray
                             : activeRoute(route.path.toLowerCase())
                             ? activeColor
-                            : 'gray.500'
+                            : inactiveColor
                         }
                         fontWeight="500"
                         letterSpacing="0px"
@@ -282,29 +222,33 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       >
                         {route.name}
                       </Text>
-                      <Link
-                        isExternal
-                        href="https://horizon-ui.com/ai-template"
-                      >
-                        <Badge
-                          display={{ base: 'flex', lg: 'none', xl: 'flex' }}
-                          colorScheme="brand"
-                          borderRadius="25px"
-                          color="brand.500"
-                          textTransform={'none'}
-                          letterSpacing="0px"
-                          px="8px"
-                        >
-                          PRO
-                        </Badge>
-                      </Link>
                     </Flex>
-                  )}
+                  </NavLink>
                 </HStack>
+                {route.disabled && (
+                  <Link isExternal href="https://horizon-ui.com/ai-template">
+                    <Badge
+                      display={{ base: 'flex', lg: 'none', xl: 'flex' }}
+                      colorScheme="brand"
+                      borderRadius="25px"
+                      color="brand.500"
+                      textTransform="none"
+                      letterSpacing="0px"
+                      px="8px"
+                    >
+                      PRO
+                    </Badge>
+                  </Link>
+                )}
               </Flex>
             ) : (
-              <ListItem ms={0} cursor="not-allowed" opacity={'0.4'}>
-                <Flex ps="32px" alignItems="center" mb="8px">
+              <ListItem ms={0} cursor={route.disabled ? 'not-allowed' : 'pointer'}>
+                <Flex
+                  ps="32px"
+                  alignItems="center"
+                  mb="8px"
+                  opacity={route.disabled ? 0.4 : 1}
+                >
                   <Text
                     color={
                       route.disabled
@@ -326,25 +270,28 @@ export function SidebarLinks(props: SidebarLinksProps) {
       }
     });
   };
-  // this function creates the links from the secondary accordions (for example auth -> sign-in -> default)
+
   const createAccordionLinks = (routes: IRoute[]) => {
-    return routes.map((route: IRoute, key: number) => {
-      return (
-        <ListItem
-          ms="28px"
-          display="flex"
-          alignItems="center"
-          mb="10px"
-          key={key}
-          cursor="not-allowed"
+    return routes.map((route, key) => (
+      <ListItem
+        ms="28px"
+        display="flex"
+        alignItems="center"
+        mb="10px"
+        key={key}
+        cursor={route.disabled ? 'not-allowed' : 'pointer'}
+      >
+        <Icon
+          w="6px"
+          h="6px"
+          me="8px"
+          as={FaCircle}
+          color={route.disabled ? gray : activeIcon}
+        />
+        <NavLink
+          href={route.layout ? route.layout + route.path : route.path}
+          onClick={onClose}
         >
-          <Icon
-            w="6px"
-            h="6px"
-            me="8px"
-            as={FaCircle}
-            color={route.disabled ? gray : activeIcon}
-          />
           <Text
             color={
               route.disabled
@@ -360,11 +307,11 @@ export function SidebarLinks(props: SidebarLinksProps) {
           >
             {route.name}
           </Text>
-        </ListItem>
-      );
-    });
+        </NavLink>
+      </ListItem>
+    ));
   };
-  //  BRAND
+
   return <>{createLinks(routes)}</>;
 }
 
