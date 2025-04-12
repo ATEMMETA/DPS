@@ -1,7 +1,5 @@
 'use client';
 import React, { PropsWithChildren } from 'react';
-
-// chakra imports
 import {
   Box,
   Flex,
@@ -21,41 +19,34 @@ import {
   renderView,
 } from '@/components/scrollbar/Scrollbar';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-
 import { IoMenuOutline } from 'react-icons/io5';
 import { IRoute } from '@/types/navigation';
 import { isWindowAvailable } from '@/utils/navigation';
 
 export interface SidebarProps extends PropsWithChildren {
   routes: IRoute[];
-  [x: string]: any;
+  setApiKey?: (key: string) => void;
 }
 
 function Sidebar(props: SidebarProps) {
   const { routes, setApiKey } = props;
-  // this is for the rest of the collapses
   let variantChange = '0.2s linear';
   let shadow = useColorModeValue(
     '14px 17px 40px 4px rgba(112, 144, 176, 0.08)',
     'unset',
   );
-  // Chakra Color Mode
   let sidebarBg = useColorModeValue('white', 'navy.800');
   let sidebarRadius = '14px';
   let sidebarMargins = '0px';
-  // SIDEBAR
+
   return (
     <Box display={{ base: 'none', xl: 'block' }} position="fixed" minH="100%">
       <Box
         bg={sidebarBg}
         transition={variantChange}
         w="285px"
-        ms={{
-          sm: '16px',
-        }}
-        my={{
-          sm: '16px',
-        }}
+        ms={{ sm: '16px' }}
+        my={{ sm: '16px' }}
         h="calc(100vh - 32px)"
         m={sidebarMargins}
         borderRadius={sidebarRadius}
@@ -70,21 +61,19 @@ function Sidebar(props: SidebarProps) {
           renderThumbVertical={renderThumb}
           renderView={renderView}
         >
-          <Content setApiKey={setApiKey} routes={routes} />
+          <Content routes={routes} setApiKey={setApiKey} />
         </Scrollbars>
       </Box>
     </Box>
   );
 }
 
-// FUNCTIONS
-export function SidebarResponsive(props: { routes: IRoute[] }) {
+export function SidebarResponsive(props: { routes: IRoute[]; onClose?: () => void }) {
   let sidebarBackgroundColor = useColorModeValue('white', 'navy.800');
   let menuColor = useColorModeValue('gray.400', 'white');
-  // // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { routes } = props;
+
   return (
     <Flex display={{ sm: 'flex', xl: 'none' }} alignItems="center">
       <Flex w="max-content" h="max-content" onClick={onOpen}>
@@ -111,12 +100,8 @@ export function SidebarResponsive(props: { routes: IRoute[] }) {
         <DrawerContent
           w="285px"
           maxW="285px"
-          ms={{
-            sm: '16px',
-          }}
-          my={{
-            sm: '16px',
-          }}
+          ms={{ sm: '16px' }}
+          my={{ sm: '16px' }}
           borderRadius="16px"
           bg={sidebarBackgroundColor}
         >
@@ -134,7 +119,7 @@ export function SidebarResponsive(props: { routes: IRoute[] }) {
               renderThumbVertical={renderThumb}
               renderView={renderView}
             >
-              <Content routes={routes} />
+              <Content routes={routes} onClose={onClose} />
             </Scrollbars>
           </DrawerBody>
         </DrawerContent>
@@ -142,6 +127,5 @@ export function SidebarResponsive(props: { routes: IRoute[] }) {
     </Flex>
   );
 }
-// PROPS
 
 export default Sidebar;
