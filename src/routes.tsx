@@ -15,8 +15,8 @@ import { IRoute } from './types/navigation';
 
 const routes: IRoute[] = [
   {
-    name: 'DPS - Dependency Helper',
-    path: '/',
+    name: 'DPS - Drag & Drop', // Renamed
+    path: '/', // Stays root
     icon: <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
@@ -33,8 +33,8 @@ const routes: IRoute[] = [
     collapse: false,
   },
   {
-    name: 'Serveo Helper',
-    path: '/chatui/serveo',
+    name: 'DPS - Dependency Helper', // Renamed from Serveo
+    path: '/chatui/serveo', // Stays /chatui/serveo
     icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
