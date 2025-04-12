@@ -6,6 +6,7 @@ import {
   Input,
   Button,
   useColorModeValue,
+  useDisclosure, // Added
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import AdminNavbar from '@/components/navbar/NavbarAdmin';
@@ -17,6 +18,7 @@ export default function GeminiHelper() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [loading, setLoading] = useState(false);
+  const { onOpen } = useDisclosure(); // Added for sidebar toggle
 
   const bgColor = useColorModeValue('gray.50', 'gray.800');
   const textColor = useColorModeValue('navy.700', 'white');
@@ -51,6 +53,7 @@ export default function GeminiHelper() {
           brandText="Gemini Helper"
           logoText="DPS"
           setApiKey={() => {}}
+          onOpen={onOpen} // Added
         />
         <Flex
           pt={{ base: '220px', md: '220px' }}
