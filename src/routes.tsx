@@ -15,8 +15,8 @@ import { IRoute } from './types/navigation';
 
 const routes: IRoute[] = [
   {
-    name: 'DPS - Drag & Drop', // Renamed
-    path: '/', // Stays root
+    name: 'DPS - Drag & Drop',
+    path: '/',
     icon: <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
@@ -33,8 +33,8 @@ const routes: IRoute[] = [
     collapse: false,
   },
   {
-    name: 'DPS - Dependency Helper', // Renamed from Serveo
-    path: '/chatui/serveo', // Stays /chatui/serveo
+    name: 'DPS - Dependency Helper',
+    path: '/chatui/serveo',
     icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
@@ -47,7 +47,7 @@ const routes: IRoute[] = [
   {
     name: 'Sign In',
     path: '/auth/sign-in',
-    icon: <Icon as={MdLogin} width="20px" height="20px" color="inherit" />,
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />, // Changed to MdLock
     collapse: false,
   },
   // Keep the rest disabled for future features
@@ -124,7 +124,6 @@ const routes: IRoute[] = [
     invisible: true,
     collapse: false,
   },
-  // Prompt Pages
   {
     name: 'Essay Generator',
     disabled: true,
