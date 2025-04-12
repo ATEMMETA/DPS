@@ -44,6 +44,12 @@ const routes: IRoute[] = [
     icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
+  {
+    name: 'Sign In',
+    path: '/auth/sign-in',
+    icon: <Icon as={MdLogin} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
   // Keep the rest disabled for future features
   {
     name: 'All Templates',
