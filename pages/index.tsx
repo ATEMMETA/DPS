@@ -5,6 +5,7 @@ import {
   Flex,
   Text,
   useColorModeValue,
+  Icon, // Added
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
@@ -166,4 +167,4 @@ export default function Home() {
       </Box>
     </>
   );
-            }
+}
