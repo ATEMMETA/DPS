@@ -109,7 +109,7 @@ export default function GrokChat() {
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '220px', md: '2200px' }} // Increased to 180px
+          pt={{ base: '220px', md: '220px' }} // Fixed typo
           direction="column"
           position="relative"
           maxW="1000px"
