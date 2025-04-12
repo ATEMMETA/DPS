@@ -1,5 +1,4 @@
 'use client';
-// chakra imports
 import {
   Badge,
   Box,
@@ -15,7 +14,6 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import NavLink from '@/components/link/NavLink';
-//   Custom components
 import avatar4 from '/public/img/avatars/avatar4.png';
 import { NextAvatar } from '@/components/image/Avatar';
 import APIModal from '@/components/apiModal';
@@ -30,15 +28,13 @@ import { FiLogOut } from 'react-icons/fi';
 import { LuHistory } from 'react-icons/lu';
 import { MdOutlineManageAccounts, MdOutlineSettings } from 'react-icons/md';
 
-// FUNCTIONS
-
 interface SidebarContent extends PropsWithChildren {
   routes: IRoute[];
-  [x: string]: any;
+  setApiKey?: (key: string) => void;
+  onClose?: () => void;
 }
 
-function SidebarContent(props: SidebarContent) {
-  const { routes, setApiKey } = props;
+function SidebarContent({ routes, setApiKey, onClose }: SidebarContent) {
   const textColor = useColorModeValue('navy.700', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
   const bgColor = useColorModeValue('white', 'navy.700');
@@ -52,7 +48,7 @@ function SidebarContent(props: SidebarContent) {
     'none',
   );
   const gray = useColorModeValue('gray.500', 'white');
-  // SIDEBAR
+
   return (
     <Flex
       direction="column"
@@ -66,11 +62,11 @@ function SidebarContent(props: SidebarContent) {
       <Brand />
       <Stack direction="column" mb="auto" mt="8px">
         <Box ps="0px" pe={{ md: '0px', '2xl': '0px' }}>
-          <Links routes={routes} />
+          <Links routes={routes} onClose={onClose} />
         </Box>
       </Stack>
 
-      <Box mt="60px" width={'100%'} display={'flex'} justifyContent={'center'}>
+      <Box mt="60px" width="100%" display="flex" justifyContent="center">
         <SidebarCard />
       </Box>
       <APIModal setApiKey={setApiKey} sidebar={true} />
@@ -100,7 +96,7 @@ function SidebarContent(props: SidebarContent) {
             p="0px"
             minW="34px"
             me="10px"
-            justifyContent={'center'}
+            justifyContent="center"
             alignItems="center"
             color={iconColor}
           >
@@ -126,20 +122,20 @@ function SidebarContent(props: SidebarContent) {
             bg={bgColor}
           >
             <Box mb="30px">
-              <Flex align="center" w="100%" cursor={'not-allowed'}>
+              <Flex align="center" w="100%" cursor="not-allowed">
                 <Icon
                   as={MdOutlineManageAccounts}
                   width="24px"
                   height="24px"
                   color={gray}
                   me="12px"
-                  opacity={'0.4'}
+                  opacity="0.4"
                 />
                 <Text
                   color={gray}
                   fontWeight="500"
                   fontSize="sm"
-                  opacity={'0.4'}
+                  opacity="0.4"
                 >
                   Profile Settings
                 </Text>
@@ -153,7 +149,7 @@ function SidebarContent(props: SidebarContent) {
                     colorScheme="brand"
                     borderRadius="25px"
                     color="brand.500"
-                    textTransform={'none'}
+                    textTransform="none"
                     letterSpacing="0px"
                     px="8px"
                   >
@@ -163,7 +159,7 @@ function SidebarContent(props: SidebarContent) {
               </Flex>
             </Box>
             <Box mb="30px">
-              <Flex cursor={'not-allowed'} align="center">
+              <Flex cursor="not-allowed" align="center">
                 <Icon
                   as={LuHistory}
                   width="24px"
@@ -185,7 +181,7 @@ function SidebarContent(props: SidebarContent) {
                     colorScheme="brand"
                     borderRadius="25px"
                     color="brand.500"
-                    textTransform={'none'}
+                    textTransform="none"
                     letterSpacing="0px"
                     px="8px"
                   >
@@ -195,7 +191,7 @@ function SidebarContent(props: SidebarContent) {
               </Flex>
             </Box>
             <Box mb="30px">
-              <Flex cursor={'not-allowed'} align="center">
+              <Flex cursor="not-allowed" align="center">
                 <Icon
                   as={RoundedChart}
                   width="24px"
@@ -217,7 +213,7 @@ function SidebarContent(props: SidebarContent) {
                     colorScheme="brand"
                     borderRadius="25px"
                     color="brand.500"
-                    textTransform={'none'}
+                    textTransform="none"
                     letterSpacing="0px"
                     px="8px"
                   >
@@ -227,7 +223,7 @@ function SidebarContent(props: SidebarContent) {
               </Flex>
             </Box>
             <Box>
-              <Flex cursor={'not-allowed'} align="center">
+              <Flex cursor="not-allowed" align="center">
                 <Icon
                   as={IoMdPerson}
                   width="24px"
@@ -249,7 +245,7 @@ function SidebarContent(props: SidebarContent) {
                     colorScheme="brand"
                     borderRadius="25px"
                     color="brand.500"
-                    textTransform={'none'}
+                    textTransform="none"
                     letterSpacing="0px"
                     px="8px"
                   >
@@ -269,7 +265,7 @@ function SidebarContent(props: SidebarContent) {
           h="34px"
           px="0px"
           minW="34px"
-          justifyContent={'center'}
+          justifyContent="center"
           alignItems="center"
         >
           <Icon as={FiLogOut} width="16px" height="16px" color="inherit" />
