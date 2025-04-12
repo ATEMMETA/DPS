@@ -5,7 +5,7 @@ import {
   Flex,
   Text,
   useColorModeValue,
-  Icon, // Added
+  Icon,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdAutoAwesome } from 'react-icons/md';
@@ -18,6 +18,7 @@ export default function Home() {
   const [inputFiles, setInputFiles] = useState<File[]>([]);
   const [outputText, setOutputText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false); // Added for sidebar
 
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
   const brandColor = useColorModeValue('brand.500', 'white');
@@ -29,6 +30,7 @@ export default function Home() {
   );
   const textColor = useColorModeValue('navy.700', 'white');
   const bgColor = useColorModeValue('gray.50', 'gray.800');
+  const sidebarBgColor = useColorModeValue('white', 'gray.800'); // Added for sidebar
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -53,6 +55,10 @@ export default function Home() {
     }, 1000);
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
       <Head>
@@ -64,6 +70,7 @@ export default function Home() {
           brandText="DPS - Drag & Drop"
           logoText="DPS"
           setApiKey={() => {}}
+          onOpen={toggleSidebar} // Added
         />
         <Flex
           pt={{ base: '220px', md: '220px' }}
@@ -164,6 +171,26 @@ export default function Home() {
             Powered by DPS.
           </Text>
         </Flex>
+        {/* Sidebar */}
+        {isOpen && (
+          <Box
+            position="fixed"
+            top="0"
+            left="0"
+            h="100vh"
+            w="250px"
+            bg={sidebarBgColor}
+            boxShadow="md"
+            zIndex="10"
+          >
+            <NavbarLinksAdmin
+              secondary={false}
+              setApiKey={() => {}}
+              onClose={toggleSidebar}
+              routes={routes}
+            />
+          </Box>
+        )}
       </Box>
     </>
   );
