@@ -16,7 +16,7 @@ import { IRoute } from './types/navigation';
 const routes: IRoute[] = [
   {
     name: 'DPS - Drag & Drop',
-    path: '/',
+    path: '/drag-drop',
     icon: <Icon as={MdAutoAwesome} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
@@ -46,11 +46,17 @@ const routes: IRoute[] = [
   },
   {
     name: 'Sign In',
-    path: '/auth/sign-in',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />, // Changed to MdLock
+    path: '/signin',
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
-  // Keep the rest disabled for future features
+  {
+    name: 'Sign Up',
+    path: '/signup',
+    icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
+    collapse: false,
+  },
+  // Disabled routes unchanged
   {
     name: 'All Templates',
     disabled: true,
