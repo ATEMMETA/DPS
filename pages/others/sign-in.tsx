@@ -5,9 +5,8 @@ import { useRouter } from 'next/router';
 
 interface CustomerInsight {
   name: string;
-  status?: string;
-  lastVisit?: string;
-  preferences?: string;
+  status: string;
+  greeting: string;
 }
 
 const AIVideoStream = () => {
@@ -96,8 +95,7 @@ const AIVideoStream = () => {
         {insights.length > 0 ? (
           insights.map((insight, index) => (
             <Text key={index}>
-              {insight.name}: {insight.status || (insight.lastVisit ? `Last Visit: ${insight.lastVisit}` : 'New Visitor')}
-              {insight.preferences ? `, Preferences: ${insight.preferences}` : ''}
+              {insight.name}: {insight.status}, {insight.greeting}
             </Text>
           ))
         ) : (
