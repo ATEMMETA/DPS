@@ -24,12 +24,15 @@ const CameraConnection = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_URL}/connect_camera`, {
+      const flaskUrl = localStorage.getItem('flaskUrl') || process.env.NEXT_PUBLIC_FLASK_URL;
+      console.log('Submitting to:', `${flaskUrl}/connect_camera`);
+      const response = await fetch(`${flaskUrl}/connect_camera`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
       });
       const result: { success: boolean; rtsp_url?: string; error?: string } = await response.json();
+      console.log('Response:', result);
       if (result.success && result.rtsp_url) {
         toast({ title: 'Camera Connected', status: 'success', duration: 3000 });
         router.push(`/others/register?rtsp=${encodeURIComponent(result.rtsp_url)}`);
@@ -43,6 +46,7 @@ const CameraConnection = () => {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      console.error('Fetch error:', errorMessage);
       toast({ title: 'Error', description: errorMessage, status: 'error', duration: 3000 });
     }
   };
