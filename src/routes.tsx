@@ -1,3 +1,4 @@
+// lib/routes.ts
 import { Icon } from './lib/chakra';
 import {
   MdFileCopy,
@@ -57,17 +58,17 @@ const routes: IRoute[] = [
     icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
-  // Updated Other Pages
+  // Updated Face Greeter section
   {
     name: 'Face Greeter',
-    disabled: false, // Enable the section
+    disabled: false,
     path: '/others',
     icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
     collapse: true,
     items: [
-      { name: 'Camera Connection', layout: '/others', path: '/prompt' },
-      { name: 'Video Stream', layout: '/others', path: '/register' },
-      { name: 'AI Video Stream', layout: '/others', path: '/sign-in' },
+      { name: 'Camera Connection', layout: '/chatui', path: '/camera_connection' },
+      { name: 'Video Stream', layout: '/chatui', path: '/video_stream' },
+      { name: 'AI Video Stream', layout: '/chatui', path: '/ai_video_stream' },
     ],
   },
   // Remaining disabled routes unchanged
