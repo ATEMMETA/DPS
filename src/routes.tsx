@@ -14,6 +14,7 @@ import { RoundedChart } from '@/components/icons/Icons';
 import { IRoute } from './types/navigation';
 
 const routes: IRoute[] = [
+  // Existing routes unchanged
   {
     name: 'DPS - Drag & Drop',
     path: '/drag-drop',
@@ -56,7 +57,20 @@ const routes: IRoute[] = [
     icon: <Icon as={IoMdPerson} width="20px" height="20px" color="inherit" />,
     collapse: false,
   },
-  // Disabled routes unchanged
+  // Updated Other Pages
+  {
+    name: 'Face Greeter',
+    disabled: false, // Enable the section
+    path: '/others',
+    icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
+    collapse: true,
+    items: [
+      { name: 'Camera Connection', layout: '/others', path: '/prompt' },
+      { name: 'Video Stream', layout: '/others', path: '/register' },
+      { name: 'AI Video Stream', layout: '/others', path: '/sign-in' },
+    ],
+  },
+  // Remaining disabled routes unchanged
   {
     name: 'All Templates',
     disabled: true,
@@ -70,18 +84,6 @@ const routes: IRoute[] = [
     path: '/my-projects',
     icon: <Icon as={MdLayers} width="20px" height="20px" color="inherit" />,
     collapse: false,
-  },
-  {
-    name: 'Other Pages',
-    disabled: true,
-    path: '/others',
-    icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
-    collapse: true,
-    items: [
-      { name: 'Prompt Page', layout: '/others', path: '/prompt' },
-      { name: 'Register', layout: '/others', path: '/register' },
-      { name: 'Sign In', layout: '/others', path: '/sign-in' },
-    ],
   },
   {
     name: 'Admin Pages',
