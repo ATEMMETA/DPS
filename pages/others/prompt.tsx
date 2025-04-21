@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/router';
 
 const CameraConnection = () => {
-  const [ip, setIp] = useState<string>('192.168.100.47'); // Pre-filled with your camera IP
+  const [ip, setIp] = useState<string>('192.168.100.47');
   const [username, setUsername] = useState<string>('admin');
   const [password, setPassword] = useState<string>('12345');
   const [wifiSsid, setWifiSsid] = useState<string>('');
@@ -24,7 +24,7 @@ const CameraConnection = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://080f-34-31-227-0.ngrok-free.app/connect_camera', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_URL}/connect_camera`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
