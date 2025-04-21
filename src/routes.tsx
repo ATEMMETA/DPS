@@ -66,9 +66,9 @@ const routes: IRoute[] = [
     icon: <Icon as={MdFileCopy} width="20px" height="20px" color="inherit" />,
     collapse: true,
     items: [
-      { name: 'Camera Connection', layout: '/chatui', path: '/camera_connection' },
-      { name: 'Video Stream', layout: '/chatui', path: '/video_stream' },
-      { name: 'AI Video Stream', layout: '/chatui', path: '/ai_video_stream' },
+      { name: 'Camera Connection', layout: '/others', path: '/prompt' },
+      { name: 'Video Stream', layout: '/others', path: '/register' },
+      { name: 'AI Video Stream', layout: '/others', path: '/sign-in' },
     ],
   },
   // Remaining disabled routes unchanged
