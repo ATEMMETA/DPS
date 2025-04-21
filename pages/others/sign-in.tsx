@@ -18,34 +18,48 @@ const AIVideoStream = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchFaceData = async () => {
+    const fetchAnalytics = async () => {
+      if (!rtsp || typeof rtsp !== 'string') return;
       setLoading(true);
       try {
-        // Placeholder: /detect_face requires an image frame
-        // For now, fetch insights based on connected camera
-        const response = await fetch('https://your-flask-ngrok-url/customer_insights', {
+        // Fetch face detection data for the connected camera
+        const response = await fetch('https://your-flask-ngrok-url/detect_face', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ face_names: faceData }),
+          body: JSON.stringify({ rtsp_url: rtsp }),
         });
-        const data: { success: boolean; insights: CustomerInsight[]; error?: string } =
+        const data: { success: boolean; names: string[]; locations: number[][]; error?: string } =
           await response.json();
         if (data.success) {
-          setInsights(data.insights);
+          setFaceData(data.names);
+
+          // Fetch customer insights
+          const insightsResponse = await fetch('https://your-flask-ngrok-url/customer_insights', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ face_names: data.names }),
+          });
+          const insightsData: { success: boolean; insights: CustomerInsight[]; error?: string } =
+            await insightsResponse.json();
+          if (insightsData.success) {
+            setInsights(insightsData.insights);
+          } else {
+            console.error('Failed to fetch insights:', insightsData.error);
+          }
         } else {
-          console.error('Failed to fetch insights:', data.error);
+          console.error('Failed to detect faces:', data.error);
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-        console.error('Error fetching face data:', errorMessage);
+        console.error('Error fetching analytics:', errorMessage);
       }
       setLoading(false);
     };
 
     // Poll every 5 seconds
-    const interval = setInterval(fetchFaceData, 5000);
+    const interval = setInterval(fetchAnalytics, 5000);
     return () => clearInterval(interval);
-  }, [faceData]);
+  }, [rtsp]);
 
   // Ensure rtsp is a string
   const rtspUrl = typeof rtsp === 'string' ? rtsp : '';
