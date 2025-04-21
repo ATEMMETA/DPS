@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/router';
 
 const CameraConnection = () => {
-  const [ip, setIp] = useState<string>('');
+  const [ip, setIp] = useState<string>('192.168.100.47'); // Pre-filled with your camera IP
   const [username, setUsername] = useState<string>('admin');
   const [password, setPassword] = useState<string>('12345');
   const [wifiSsid, setWifiSsid] = useState<string>('');
@@ -24,7 +24,7 @@ const CameraConnection = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://your-vercel-backend-url/api/connect', {
+      const response = await fetch('https://080f-34-31-227-0.ngrok-free.app/connect_camera', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
@@ -42,7 +42,6 @@ const CameraConnection = () => {
         });
       }
     } catch (error) {
-      // Type guard to ensure error is an Error object
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       toast({ title: 'Error', description: errorMessage, status: 'error', duration: 3000 });
     }
@@ -60,7 +59,7 @@ const CameraConnection = () => {
             <Input
               value={ip}
               onChange={(e) => setIp(e.target.value)}
-              placeholder="192.168.1.100"
+              placeholder="192.168.100.47"
             />
           </FormControl>
           <FormControl>
