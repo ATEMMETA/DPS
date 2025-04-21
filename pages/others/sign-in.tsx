@@ -22,8 +22,7 @@ const AIVideoStream = () => {
       if (!rtsp || typeof rtsp !== 'string') return;
       setLoading(true);
       try {
-        // Fetch face detection data for the connected camera
-        const response = await fetch('https://your-flask-ngrok-url/detect_face', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_FLASK_URL}/detect_face`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ rtsp_url: rtsp }),
@@ -33,8 +32,7 @@ const AIVideoStream = () => {
         if (data.success) {
           setFaceData(data.names);
 
-          // Fetch customer insights
-          const insightsResponse = await fetch('https://your-flask-ngrok-url/customer_insights', {
+          const insightsResponse = await fetch(`${process.env.NEXT_PUBLIC_FLASK_URL}/customer_insights`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ face_names: data.names }),
@@ -56,12 +54,10 @@ const AIVideoStream = () => {
       setLoading(false);
     };
 
-    // Poll every 5 seconds
     const interval = setInterval(fetchAnalytics, 5000);
     return () => clearInterval(interval);
   }, [rtsp]);
 
-  // Ensure rtsp is a string
   const rtspUrl = typeof rtsp === 'string' ? rtsp : '';
 
   return (
@@ -71,7 +67,7 @@ const AIVideoStream = () => {
       </Text>
       {rtspUrl ? (
         <Image
-          src={`https://your-flask-ngrok-url/video_feed?rtsp=${encodeURIComponent(rtspUrl)}`}
+          src={`${process.env.NEXT_PUBLIC_FLASK_URL}/video_feed?rtsp=${encodeURIComponent(rtspUrl)}`}
           alt="Camera Feed"
           width="100%"
           fallbackSrc="/placeholder.jpg"
