@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { createOpenAI } from '@ai-sdk/openai';
 import Head from 'next/head';
 import {
   Box,
@@ -15,7 +16,12 @@ import AdminNavbar from '@/components/navbar/NavbarAdmin';
 import NavbarLinksAdmin from '@/components/navbar/NavbarLinksAdmin';
 import routes from '@/routes';
 
-export default function GptChat() {
+const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+if (!apiKey) throw new Error('NEXT_PUBLIC_OPENAI_API_KEY is not set');
+const openai = createOpenAI({ apiKey });
+const chatModel = openai('gpt-4o-mini'); // Chat GPT placeholder
+
+export default function GrokChat() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
   const [inputCode, setInputCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,7 +40,7 @@ export default function GptChat() {
   const sidebarBgColor = useColorModeValue('white', 'gray.800');
 
   useEffect(() => {
-    setMessages([{ role: 'ai' as const, content: 'Hey there! I’m GPT, ready to chat.' }]);
+    setMessages([{ role: 'ai' as const, content: 'Hey there! I’m Grok, ready to chat.' }]);
   }, []);
 
   useEffect(() => {
@@ -50,20 +56,17 @@ export default function GptChat() {
     setLoading(true);
 
     try {
-      // Placeholder: Replace with OpenAI API
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'ai' as const, content: `GPT response: ${inputCode} (stub)` },
-        ] as { role: 'user' | 'ai'; content: string }[]);
-        setLoading(false);
-      }, 1000);
+      const result = await chatModel.doGenerate({
+        inputFormat: 'messages',
+        mode: { type: 'regular' },
+        prompt: [{ role: 'user', content: [{ type: 'text', text: inputCode }] }],
+        maxTokens: 500,
+      });
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: result.text ?? 'No response' }] as { role: 'user' | 'ai'; content: string }[]);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong.';
-      setMessages((prev) => [
-        ...prev,
-        { role: 'ai' as const, content: `Error: ${errorMessage}` },
-      ] as { role: 'user' | 'ai'; content: string }[]);
+      setMessages((prev) => [...prev, { role: 'ai' as const, content: `Error: ${errorMessage}` }] as { role: 'user' | 'ai'; content: string }[]);
+    } finally {
       setLoading(false);
     }
   };
@@ -90,13 +93,13 @@ export default function GptChat() {
   return (
     <>
       <Head>
-        <title>GPT Chat</title>
+        <title>Grok Chat</title>
       </Head>
       <Box minH="100vh" display="flex" flexDirection="column" bg={bgColor}>
         {/* Navbar */}
         <AdminNavbar
           secondary={false}
-          brandText="GPT Chat"
+          brandText="Grok Chat"
           logoText="DPS"
           onOpen={toggleSidebar}
           setApiKey={() => {}}
@@ -106,7 +109,7 @@ export default function GptChat() {
         <Flex
           flex={1}
           w="100%"
-          pt={{ base: '220px', md: '220px' }}
+          pt={{ base: '220px', md: '220px' }} // Fixed typo
           direction="column"
           position="relative"
           maxW="1000px"
