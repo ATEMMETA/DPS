@@ -21,12 +21,14 @@ const CameraConnection = () => {
   const toast = useToast();
   const router = useRouter();
 
+  // Updated constant for the Flask backend URL
+  const flaskBackendUrl = 'https://v0-new-project-pynnff3lkmc.vercel.app/api/connect_camera';
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const flaskUrl = localStorage.getItem('flaskUrl') || process.env.NEXT_PUBLIC_FLASK_URL;
-      console.log('Submitting to:', `${flaskUrl}/connect_camera`);
-      const response = await fetch(`${flaskUrl}/connect_camera`, {
+      console.log('Submitting to:', flaskBackendUrl);
+      const response = await fetch(flaskBackendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
