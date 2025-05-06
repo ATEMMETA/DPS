@@ -167,4 +167,21 @@ const CameraConnection = () => {
               value={wifiPassword}
               onChange={(e) => setWifiPassword(e.target.value)}
               placeholder="Wi-Fi Password"
-              aria
+              aria-label="Wi-Fi Password"
+            />
+          </FormControl>
+          <VStack spacing={2} w="100%">
+            <Button type="submit" colorScheme="blue" isLoading={isLoading} w="100%">
+              Connect Camera
+            </Button>
+            <Button type="button" colorScheme="gray" onClick={handleReset} w="100%">
+              Reset
+            </Button>
+          </VStack>
+        </VStack>
+      </form>
+    </Box>
+  );
+};
+
+export default CameraConnection;
