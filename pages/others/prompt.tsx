@@ -1,5 +1,5 @@
 // pages/others/prompt.tsx
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import debounce from 'lodash/debounce';
 
 const CameraConnection = () => {
   const [ip, setIp] = useState<string>('');
@@ -22,10 +23,16 @@ const CameraConnection = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const flaskBackendUrl = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_BACKEND_URL
-  ? process.env.NEXT_PUBLIC_BACKEND_URL
-  : 'http://localhost:5000/api/connect_camera';
-  
+  const flaskBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/connect_camera';
+
+  // Debounced IP input handler (300ms delay)
+  const debouncedSetIp = useCallback(
+    debounce((value: string) => {
+      setIp(value);
+    }, 300),
+    []
+  );
+
   const isValidIp = (ip: string) => {
     // Regex ensures each segment is 0-255 and follows IP format
     const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -34,10 +41,32 @@ const CameraConnection = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate IP address
     if (!isValidIp(ip)) {
       toast({
         title: 'Invalid IP Address',
         description: 'Please enter a valid IP address (e.g., 192.168.100.47).',
+        status: 'error',
+        duration: 5000,
+      });
+      return;
+    }
+
+    // Validate Wi-Fi credentials: if one is provided, both must be
+    if (wifiSsid && !wifiPassword) {
+      toast({
+        title: 'Missing Wi-Fi Password',
+        description: 'Please provide a Wi-Fi password if an SSID is specified.',
+        status: 'error',
+        duration: 5000,
+      });
+      return;
+    }
+    if (wifiPassword && !wifiSsid) {
+      toast({
+        title: 'Missing Wi-Fi SSID',
+        description: 'Please provide a Wi-Fi SSID if a password is specified.',
         status: 'error',
         duration: 5000,
       });
@@ -78,6 +107,15 @@ const CameraConnection = () => {
     }
   };
 
+  // Reset form fields
+  const handleReset = () => {
+    setIp('');
+    setUsername('');
+    setPassword('');
+    setWifiSsid('');
+    setWifiPassword('');
+  };
+
   return (
     <Box p={8} maxW="500px" mx="auto">
       <Text fontSize="2xl" mb={4}>
@@ -89,7 +127,7 @@ const CameraConnection = () => {
             <FormLabel>Camera IP</FormLabel>
             <Input
               value={ip}
-              onChange={(e) => setIp(e.target.value)}
+              onChange={(e) => debouncedSetIp(e.target.value)}
               placeholder="192.168.100.47"
               aria-label="Camera IP Address"
             />
@@ -132,9 +170,14 @@ const CameraConnection = () => {
               aria-label="Wi-Fi Password"
             />
           </FormControl>
-          <Button type="submit" colorScheme="blue" isLoading={isLoading}>
-            Connect Camera
-          </Button>
+          <VStack spacing={2} w="100%">
+            <Button type="submit" colorScheme="blue" isLoading={isLoading} w="100%">
+              Connect Camera
+            </Button>
+            <Button type="button" colorScheme="gray" onClick={handleReset} w="100%">
+              Reset
+            </Button>
+          </VStack>
         </VStack>
       </form>
     </Box>
