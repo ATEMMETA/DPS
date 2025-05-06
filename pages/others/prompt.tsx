@@ -1,5 +1,5 @@
 // pages/others/prompt.tsx
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import debounce from 'lodash/debounce';
 
 const CameraConnection = () => {
   const [ip, setIp] = useState<string>('');
@@ -24,50 +25,60 @@ const CameraConnection = () => {
 
   const flaskBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/connect_camera';
 
+  // Debounced IP input handler (300ms delay)
+  const debouncedSetIp = useCallback(
+    debounce((value: string) => {
+      setIp(value);
+    }, 300),
+    []
+  );
+
   const isValidIp = (ip: string) => {
-    const ipRegex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+    // Regex ensures each segment is 0-255 and follows IP format
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
     return ipRegex.test(ip);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsLoading(true);
-  try {
-    const response = await fetch(flaskBackendUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const result: { success: boolean; rtsp_url?: string; error?: string } = await response.json();
-    if (result.success && result.rtsp_url) {
-      toast({ title: 'Camera Connected', status: 'success', duration: 5000 });
-      router.push(`/others/register?rtsp=${encodeURIComponent(result.rtsp_url)}`);
-    } else {
+    e.preventDefault();
+
+    // Validate IP address
+    if (!isValidIp(ip)) {
       toast({
-        title: 'Connection Failed',
-        description: result.error || 'Unknown error',
+        title: 'Invalid IP Address',
+        description: 'Please enter a valid IP address (e.g., 192.168.100.47).',
         status: 'error',
         duration: 5000,
       });
+      return;
     }
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-    console.error('Fetch error:', errorMessage);
-    toast({ title: 'Error', description: errorMessage, status: 'error', duration: 5000 });
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    // Validate Wi-Fi credentials: if one is provided, both must be
+    if (wifiSsid && !wifiPassword) {
+      toast({
+        title: 'Missing Wi-Fi Password',
+        description: 'Please provide a Wi-Fi password if an SSID is specified.',
+        status: 'error',
+        duration: 5000,
+      });
+      return;
+    }
+    if (wifiPassword && !wifiSsid) {
+      toast({
+        title: 'Missing Wi-Fi SSID',
+        description: 'Please provide a Wi-Fi SSID if a password is specified.',
+        status: 'error',
+        duration: 5000,
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
       const response = await fetch(flaskBackendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // Backend expects snake_case field names
         body: JSON.stringify({ ip, username, password, wifi_ssid: wifiSsid, wifi_password: wifiPassword }),
       });
 
@@ -96,6 +107,15 @@ const CameraConnection = () => {
     }
   };
 
+  // Reset form fields
+  const handleReset = () => {
+    setIp('');
+    setUsername('');
+    setPassword('');
+    setWifiSsid('');
+    setWifiPassword('');
+  };
+
   return (
     <Box p={8} maxW="500px" mx="auto">
       <Text fontSize="2xl" mb={4}>
@@ -107,7 +127,7 @@ const CameraConnection = () => {
             <FormLabel>Camera IP</FormLabel>
             <Input
               value={ip}
-              onChange={(e) => setIp(e.target.value)}
+              onChange={(e) => debouncedSetIp(e.target.value)}
               placeholder="192.168.100.47"
               aria-label="Camera IP Address"
             />
@@ -147,16 +167,4 @@ const CameraConnection = () => {
               value={wifiPassword}
               onChange={(e) => setWifiPassword(e.target.value)}
               placeholder="Wi-Fi Password"
-              aria-label="Wi-Fi Password"
-            />
-          </FormControl>
-          <Button type="submit" colorScheme="blue" isLoading={isLoading}>
-            Connect Camera
-          </Button>
-        </VStack>
-      </form>
-    </Box>
-  );
-};
-
-export default CameraConnection;
+              aria
