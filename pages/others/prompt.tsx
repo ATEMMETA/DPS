@@ -22,8 +22,10 @@ const CameraConnection = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const flaskBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api/connect_camera';
-
+  const flaskBackendUrl = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_BACKEND_URL
+  ? process.env.NEXT_PUBLIC_BACKEND_URL
+  : 'http://localhost:5000/api/connect_camera';
+  
   const isValidIp = (ip: string) => {
     // Regex ensures each segment is 0-255 and follows IP format
     const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
